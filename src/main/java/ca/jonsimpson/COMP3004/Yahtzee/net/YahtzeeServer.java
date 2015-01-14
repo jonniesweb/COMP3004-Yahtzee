@@ -11,11 +11,11 @@ public class YahtzeeServer {
 		Registry registry = LocateRegistry.createRegistry(Registry.REGISTRY_PORT);
 		
 		// create a rmi server
-		CommandServiceImpl remoteDateImpl = new CommandServiceImpl();
+		ServerCommandServiceImpl commandService = new ServerCommandServiceImpl();
 		System.out.println("CommandService server running");
 		
 		// bind the CommandService to the registry
-		registry.rebind(CommandService.LOOKUPNAME, remoteDateImpl);
+		registry.rebind(ServerCommandService.LOOKUPNAME, commandService);
 		System.out.println("CommandService server ready");
 		
 	}

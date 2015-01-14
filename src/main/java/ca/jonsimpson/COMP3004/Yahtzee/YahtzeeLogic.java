@@ -1,6 +1,5 @@
 package ca.jonsimpson.COMP3004.Yahtzee;
 
-import java.util.Random;
 
 public class YahtzeeLogic {
 	boolean isGameStarted = false;

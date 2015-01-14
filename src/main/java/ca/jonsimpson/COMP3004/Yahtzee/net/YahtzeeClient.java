@@ -24,7 +24,8 @@ public class YahtzeeClient {
 			Registry registry = LocateRegistry.getRegistry(RMI_SERVER_HOSTNAME, RMI_SERVER_PORT);
 
 			// get the CommandService interface from the registry
-			CommandService service = (CommandService) registry.lookup(CommandService.LOOKUPNAME);
+			ServerCommandService service = (ServerCommandService) registry.lookup(ServerCommandService.LOOKUPNAME);
+			service.connect(new ClientCommandServiceImpl());
 			log.info("Successfully connected to the server");
 			
 			Date today = service.getRemoteDate();
