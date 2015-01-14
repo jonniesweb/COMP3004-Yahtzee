@@ -1,7 +1,10 @@
-package ca.jonsimpson.COMP3004.Yahtzee.net;
+package ca.jonsimpson.comp3004.yahtzee.main;
 
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
+
+import ca.jonsimpson.comp3004.yahtzee.net.ServerCommandService;
+import ca.jonsimpson.comp3004.yahtzee.net.ServerCommandServiceImpl;
 
 public class YahtzeeServer {
 	

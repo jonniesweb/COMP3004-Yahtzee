@@ -1,4 +1,4 @@
-package ca.jonsimpson.COMP3004.Yahtzee;
+package ca.jonsimpson.comp3004.yahtzee;
 
 import java.util.ArrayList;
 import java.util.Collections;

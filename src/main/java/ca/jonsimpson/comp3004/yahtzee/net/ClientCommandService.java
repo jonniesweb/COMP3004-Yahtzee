@@ -1,4 +1,4 @@
-package ca.jonsimpson.COMP3004.Yahtzee.net;
+package ca.jonsimpson.comp3004.yahtzee.net;
 
 import java.rmi.Remote;
 import java.rmi.RemoteException;

@@ -1,4 +1,4 @@
-package ca.jonsimpson.COMP3004.Yahtzee.net;
+package ca.jonsimpson.comp3004.yahtzee.net;
 
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
@@ -10,18 +10,18 @@ public class ServerCommandServiceImpl extends UnicastRemoteObject implements Ser
 	private static final long serialVersionUID = 6167309695864789937L;
 	private ArrayList<ClientCommandService> clientList = new ArrayList<ClientCommandService>();
 
-	protected ServerCommandServiceImpl() throws RemoteException {
+	public ServerCommandServiceImpl() throws RemoteException {
 		super();
 	}
 
 	@Override
-	public Date getRemoteDate() throws RemoteException {
+	public Date getRemoteDate() {
 		System.out.println("ermagerd");
 		return new Date();
 	}
 
 	@Override
-	public void connect(ClientCommandService client) throws RemoteException {
+	public void connect(ClientCommandService client) {
 		clientList.add(client);
 		try {
 			client.alert("whazzup!");

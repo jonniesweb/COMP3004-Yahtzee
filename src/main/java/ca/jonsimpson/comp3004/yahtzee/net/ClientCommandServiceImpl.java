@@ -1,4 +1,4 @@
-package ca.jonsimpson.COMP3004.Yahtzee.net;
+package ca.jonsimpson.comp3004.yahtzee.net;
 
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
@@ -7,7 +7,7 @@ public class ClientCommandServiceImpl extends UnicastRemoteObject implements Cli
 	
 	private static final long serialVersionUID = -5230221009389671127L;
 	
-	protected ClientCommandServiceImpl() throws RemoteException {
+	public ClientCommandServiceImpl() throws RemoteException {
 		super();
 	}
 

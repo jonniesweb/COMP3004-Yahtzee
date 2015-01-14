@@ -1,4 +1,4 @@
-package ca.jonsimpson.COMP3004.Yahtzee.net;
+package ca.jonsimpson.comp3004.yahtzee.main;
 
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
@@ -8,6 +8,9 @@ import java.util.Date;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+
+import ca.jonsimpson.comp3004.yahtzee.net.ClientCommandServiceImpl;
+import ca.jonsimpson.comp3004.yahtzee.net.ServerCommandService;
 
 public class YahtzeeClient {
 	

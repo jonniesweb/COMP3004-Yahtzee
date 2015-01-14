@@ -1,8 +1,11 @@
-package ca.jonsimpson.COMP3004.Yahtzee;
+package ca.jonsimpson.comp3004.yahtzee;
 
 import static org.junit.Assert.*;
 
 import org.junit.Test;
+
+import ca.jonsimpson.comp3004.yahtzee.DiceSet;
+import ca.jonsimpson.comp3004.yahtzee.DiceSetScorer;
 
 public class DiceSetScorerTest {
 	
