@@ -2,6 +2,7 @@ package ca.jonsimpson.COMP3004.Yahtzee;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
 import java.util.Set;
@@ -73,6 +74,20 @@ public class DiceSet {
 		return random.nextInt(6) + 1;
 	}
 	
+	HashMap<Integer, Integer> getDiceAsFrequencyMap() {
+		List<Integer> list = getDice();
+		HashMap<Integer, Integer> map = new HashMap<Integer, Integer>(list.size());
+		for (Integer integer : list) {
+			Integer mapValue = map.get(integer);
+			if (mapValue != null) {
+				map.put(integer, mapValue + 1);
+			} else {
+				map.put(integer, 1);
+			}
+		}
+		return map;
+	}
+
 	public static void main(String[] args) {
 		DiceSet diceSet = new DiceSet();
 		test(diceSet);

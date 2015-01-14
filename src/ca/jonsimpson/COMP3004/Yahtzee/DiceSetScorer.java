@@ -1,9 +1,16 @@
 package ca.jonsimpson.COMP3004.Yahtzee;
 
+import java.util.HashMap;
 import java.util.List;
 
-public class DiceSetScorer {
+public final class DiceSetScorer {
 	
+	private static final int POINTS_FULL_HOUSE = 25;
+	private static final int POINTS_SMALL_FLUSH = 30;
+	private static final int POINTS_LARGE_FLUSH = 40;
+	private static final int POINTS_YAHTZEE = 50;
+	private static final int POINTS_BONUS = 35;
+
 	static int getPointsForOnes(DiceSet dice) {
 		return getPointsForNumber(1, dice);
 	}
@@ -38,6 +45,57 @@ public class DiceSetScorer {
 		return count;
 	}
 	
+	static int getPointsFor3OfAKind(DiceSet dice) {
+		HashMap<Integer, Integer> map = dice.getDiceAsFrequencyMap();
+		FrequentElementCount mostFrequentElement = getMostFrequentElement(map);
+		
+		if (mostFrequentElement.getFrequency() >= 3)
+			return getPointsForChance(dice);
+		return 0;
+	}
+	
+	static int getPointsFor4OfAKind(DiceSet dice) {
+		HashMap<Integer, Integer> map = dice.getDiceAsFrequencyMap();
+		FrequentElementCount mostFrequentElement = getMostFrequentElement(map);
+		
+		if (mostFrequentElement.getFrequency() >= 4)
+			return getPointsForChance(dice);
+		return 0;
+	}
+
+	private static FrequentElementCount getMostFrequentElement(HashMap<Integer, Integer> map) {
+		Integer mostCommonDie = null;
+		Integer maxFrequency = 0;
+		
+		for (Integer key : map.keySet()) {
+			if (map.get(key) > maxFrequency) {
+				mostCommonDie = key;
+				maxFrequency = map.get(key);
+			}
+		}
+		return new DiceSetScorer().new FrequentElementCount(mostCommonDie, maxFrequency);
+	}
+	
+	private class FrequentElementCount {
+		private final Integer element;
+		private final Integer frequency;
+		
+		/**
+		 * @param element
+		 * @param frequency
+		 */
+		public FrequentElementCount(Integer element, Integer frequency) {
+			this.element = element;
+			this.frequency = frequency;
+		}
+		public Integer getFrequency() {
+			return frequency;
+		}
+		public Integer getElement() {
+			return element;
+		}
+	}
+	
 	static int getPointsForFullHouse(DiceSet dice) {
 		List<Integer> list = dice.getSortedDice();
 		
@@ -46,7 +104,7 @@ public class DiceSetScorer {
 		
 		if (list.get(1).equals(first) && list.get(3).equals(second)
 				&& (list.get(2).equals(first) || list.get(2).equals(second))) {
-			return 25;
+			return POINTS_FULL_HOUSE;
 		}
 		return 0;
 	}
@@ -55,7 +113,7 @@ public class DiceSetScorer {
 		List<Integer> list = dice.getUniqueSortedDice();
 		
 		if (list.size() > 3 && list.get(3).equals(list.get(0) + 3)) {
-			return 30;
+			return POINTS_SMALL_FLUSH;
 		}
 		
 		return 0;
@@ -65,7 +123,7 @@ public class DiceSetScorer {
 		List<Integer> list = dice.getUniqueSortedDice();
 		
 		if (list.size() > 3 && list.get(4).equals(list.get(0) + 4)) {
-			return 40;
+			return POINTS_LARGE_FLUSH;
 		}
 		
 		return 0;
@@ -77,11 +135,33 @@ public class DiceSetScorer {
 		if (list.get(0).equals(list.get(1)) && list.get(0).equals(list.get(2))
 				&& list.get(0).equals(list.get(3))
 				&& list.get(0).equals(list.get(4))) {
-			return 50;
+			return POINTS_YAHTZEE;
 		}
 		return 0;
 	}
 	
+	/**
+	 * Rewards bonus points if the sum of all six dice categories is at least 63.
+	 * @param ones
+	 * @param twos
+	 * @param threes
+	 * @param fours
+	 * @param fives
+	 * @param sixes
+	 * @return
+	 */
+	static int getPointsForBonus(int ones, int twos, int threes, int fours, int fives, int sixes) {
+		
+		if (ones + twos + threes + fours + fives + sixes >= 63)
+			return POINTS_BONUS;
+		return 0;
+	}
+	
+	/**
+	 * Returns the sum of all the dice.
+	 * @param dice
+	 * @return
+	 */
 	static int getPointsForChance(DiceSet dice) {
 		return dice.getDice().stream().reduce(0, (x, y) -> x + y);
 	}

@@ -7,6 +7,33 @@ import org.junit.Test;
 public class DiceSetScorerTest {
 	
 	@Test
+	public void test3OfAKind() {
+		DiceSet set1 = getSpecificDice(1,2,3,4,5);
+		assertEquals(0, DiceSetScorer.getPointsFor3OfAKind(set1));
+		
+		DiceSet set2 = getSpecificDice(2,3,3,3,1);
+		assertEquals(12, DiceSetScorer.getPointsFor3OfAKind(set2));
+		
+		DiceSet set3 = getSpecificDice(3,3,3,3,3);
+		assertEquals(15, DiceSetScorer.getPointsFor3OfAKind(set3));
+	}
+	
+	@Test
+	public void test4OfAKind() {
+		DiceSet set1 = getSpecificDice(1,2,3,4,5);
+		assertEquals(0, DiceSetScorer.getPointsFor4OfAKind(set1));
+		
+		DiceSet set2 = getSpecificDice(2,3,3,3,1);
+		assertEquals(0, DiceSetScorer.getPointsFor4OfAKind(set2));
+		
+		DiceSet set3 = getSpecificDice(3,3,3,3,1);
+		assertEquals(13, DiceSetScorer.getPointsFor4OfAKind(set3));
+		
+		DiceSet set4 = getSpecificDice(3,3,3,3,3);
+		assertEquals(15, DiceSetScorer.getPointsFor4OfAKind(set4));
+	}
+	
+	@Test
 	public void testSmallFlush() {
 		DiceSet set1 = getSpecificDice(1,2,3,4,5);
 		assertEquals(30, DiceSetScorer.getPointsForSmallFlush(set1));
@@ -61,7 +88,16 @@ public class DiceSetScorerTest {
 		assertEquals(7, DiceSetScorer.getPointsForChance(set3));
 	}
 	
-	static DiceSet getSpecificDice(int ... dice) {
+	@Test
+	public void testBonus() {
+		assertEquals(0, DiceSetScorer.getPointsForBonus(1,1,1,1,1,1));
+		
+		assertEquals(35, DiceSetScorer.getPointsForBonus(63, 0, 0, 0, 0, 0));
+		
+		assertEquals(35, DiceSetScorer.getPointsForBonus(64, 0, 0, 0, 0, 0));
+	}
+	
+	private DiceSet getSpecificDice(int ... dice) {
 		DiceSet diceSet = new DiceSet();
 		
 		for (int i : dice) {
