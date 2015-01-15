@@ -2,33 +2,62 @@ package ca.jonsimpson.comp3004.yahtzee.net;
 
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
-import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import ca.jonsimpson.comp3004.yahtzee.DiceSet;
+import ca.jonsimpson.comp3004.yahtzee.Player;
+import ca.jonsimpson.comp3004.yahtzee.PointCategory;
 
 public class ServerCommandServiceImpl extends UnicastRemoteObject implements ServerCommandService {
 
 	private static final long serialVersionUID = 6167309695864789937L;
-	private ArrayList<ClientCommandService> clientList = new ArrayList<ClientCommandService>();
-
+	Map<String, ClientCommandService> clients = new HashMap<>();
+	
+	
 	public ServerCommandServiceImpl() throws RemoteException {
 		super();
 	}
 
 	@Override
 	public Date getRemoteDate() {
-		System.out.println("ermagerd");
 		return new Date();
 	}
 
 	@Override
-	public void connect(ClientCommandService client) {
-		clientList.add(client);
-		try {
-			client.alert("whazzup!");
-		} catch (RemoteException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+	public void connect(String sessionID, Player player, ClientCommandService client) {
+		new Player(player.getId(), player.getName(), sessionID);
+		
+		clients.put(sessionID, client);
+	}
+
+	@Override
+	public List<Player> getPlayers() throws RemoteException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public DiceSet rollDice(String sessionID, DiceSet dice) throws RemoteException,
+			NoMoreRollsException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void updatePlayer(String sessionID, Player player) throws RemoteException,
+			PlayerAlreadyExistsException {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void chooseCategory(String sessionID, PointCategory category) throws RemoteException,
+			PointCategoryAlreadyTakenException {
+		// TODO Auto-generated method stub
+		
 	}
 	
 	

@@ -1,0 +1,6 @@
+package ca.jonsimpson.comp3004.yahtzee;
+
+public enum PointCategory {
+	ONES, TWOS, THREES, FOURS, FIVES, SIXES, THREE_KIND, FOUR_KIND, FULL_HOUSE,
+	SMALL_STRAIGHT, LARGE_STRAIGHT, YAHTZEE, CHANCE, BONUS_1, BONUS_2, BONUS_3
+}
