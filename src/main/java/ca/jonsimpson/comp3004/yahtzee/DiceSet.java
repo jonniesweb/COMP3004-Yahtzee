@@ -15,11 +15,13 @@ public class DiceSet {
 	ArrayList<Integer> rolledDice = new ArrayList<Integer>(5);
 	ArrayList<Integer> savedDice = new ArrayList<Integer>(5);
 	
-	DiceSet() {
-//		reset();
+	public DiceSet() {
 	}
 	
-	void reset() {
+	/**
+	 * Initialize a new set of five dice, all set to one.
+	 */
+	public void init() {
 		rolledDice.clear();
 		savedDice.clear();
 		
@@ -28,7 +30,7 @@ public class DiceSet {
 		}
 	}
 	
-	void rollDice() {
+	public void rollDice() {
 		int size = rolledDice.size();
 		rolledDice.clear();
 		for (int i = 0; i < size; i++) {
@@ -36,7 +38,7 @@ public class DiceSet {
 		}
 	}
 	
-	List<Integer> getDice() {
+	public List<Integer> getDice() {
 		ArrayList<Integer> list = new ArrayList<Integer>();
 		list.addAll(rolledDice);
 		list.addAll(savedDice);
@@ -87,7 +89,11 @@ public class DiceSet {
 		}
 		return map;
 	}
-
+	
+	public boolean equalsIgnoreOrder(DiceSet dice) {
+		return getSortedDice().equals(dice.getSortedDice());
+	}
+	
 	public static void main(String[] args) {
 		DiceSet diceSet = new DiceSet();
 		test(diceSet);
