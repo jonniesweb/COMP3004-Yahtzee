@@ -23,9 +23,10 @@ public interface ServerCommandService extends Remote {
 	public void connect(String sessionID, Player player, ClientCommandService client) throws RemoteException;
 	
 	public List<Player> getPlayers() throws RemoteException;
-	public DiceSet rollDice(String sessionID, DiceSet dice) throws RemoteException, NoMoreRollsException;
+	public DiceSet rollDice(String sessionID) throws RemoteException, NoMoreRollsException;
 	public void updatePlayer(String sessionID, Player player) throws RemoteException, PlayerAlreadyExistsException;
 	public void chooseCategory(String sessionID, PointCategory category) throws RemoteException, PointCategoryAlreadyTakenException;
 	
 	public Date getRemoteDate() throws RemoteException;
+	
 }

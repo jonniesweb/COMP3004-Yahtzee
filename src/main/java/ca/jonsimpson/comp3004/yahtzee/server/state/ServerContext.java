@@ -1,5 +1,8 @@
 package ca.jonsimpson.comp3004.yahtzee.server.state;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import ca.jonsimpson.comp3004.yahtzee.DiceSet;
 import ca.jonsimpson.comp3004.yahtzee.DiceSetScorer;
 import ca.jonsimpson.comp3004.yahtzee.InvalidPointCategoryException;
@@ -12,6 +15,7 @@ import ca.jonsimpson.comp3004.yahtzee.net.PointCategoryAlreadyTakenException;
 public class ServerContext {
 	
 	private static ScoreCard scoreCard;
+	private static List<Player> players = new ArrayList<Player>();
 
 	/**
 	 * 

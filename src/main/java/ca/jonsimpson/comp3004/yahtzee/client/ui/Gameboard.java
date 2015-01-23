@@ -1,9 +1,14 @@
 package ca.jonsimpson.comp3004.yahtzee.client.ui;
 
 import java.awt.Color;
-import java.awt.EventQueue;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.rmi.RemoteException;
+import java.util.Observable;
+import java.util.Observer;
 
 import javax.swing.JButton;
+import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JSeparator;
@@ -12,8 +17,13 @@ import javax.swing.border.BevelBorder;
 import javax.swing.border.EmptyBorder;
 
 import net.miginfocom.swing.MigLayout;
+import ca.jonsimpson.comp3004.yahtzee.DiceSet;
+import ca.jonsimpson.comp3004.yahtzee.ScoreCard;
+import ca.jonsimpson.comp3004.yahtzee.client.ClientLogic;
+import ca.jonsimpson.comp3004.yahtzee.main.IView;
+import ca.jonsimpson.comp3004.yahtzee.net.NoMoreRollsException;
 
-public class Gameboard extends JFrame {
+public class Gameboard extends JFrame implements IView {
 	
 	private JPanel contentPane;
 	private final JPanel panelRolledDice = new JPanel();
@@ -22,25 +32,14 @@ public class Gameboard extends JFrame {
 	private final JSeparator separator = new JSeparator();
 	
 	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					Gameboard frame = new Gameboard();
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
-	
-	/**
 	 * Create the frame.
 	 */
 	public Gameboard() {
+		init();
+		setVisible(true);
+	}
+
+	private void init() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 785, 411);
 		contentPane = new JPanel();
@@ -62,19 +61,6 @@ public class Gameboard extends JFrame {
 		panelRolledDice.setBorder(new BevelBorder(1, black, black));
 		panelSelectedDice.setBorder(new BevelBorder(1, black, black));
 		
-		
-		// add demo dice
-		addDieToSelectedDice(getDie(1));
-		addDieToSelectedDice(getDie(2));
-		addDieToSelectedDice(getDie(3));
-		addDieToSelectedDice(getDie(4));
-		addDieToSelectedDice(getDie(5));
-		
-		addDieToRolledDice(getDie(1));
-		addDieToRolledDice(getDie(2));
-		addDieToRolledDice(getDie(3));
-		addDieToRolledDice(getDie(4));
-		addDieToRolledDice(getDie(5));
 	}
 	
 	private JButton getDie(Integer number) {
@@ -90,5 +76,76 @@ public class Gameboard extends JFrame {
 	
 	private void addDieToRolledDice(JButton die) {
 		panelRolledDice.add(die);
+	}
+	
+	/**
+	 * Update the view with the given {@link DiceSet}
+	 * @param dice
+	 */
+	public void updateDice(DiceSet dice) {
+		panelRolledDice.removeAll();
+		for (Integer die : dice.getRolledDice()) {
+			addDieToRolledDice(getDie(die));
+			
+		}
+		
+		
+		panelSelectedDice.removeAll();
+		for (Integer die : dice.getSavedDice()) {
+			addDieToSelectedDice(getDie(die));
+		}
+		update(panelRolledDice);
+		update(panelSelectedDice);
+	}
+
+	private void update(JComponent component) {
+		component.revalidate();
+//		component.repaint();
+	}
+
+	@Override
+	public void updateScoreCard(ScoreCard scoreCard) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void addRollDiceObserver(Observer observer) {
+		
+		// on roll button press, notify the observers
+		ButtonObserver observable = new ButtonObserver();
+		observable.addObserver(observer);
+		btnRoll.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				observable.click();
+				observable.notifyObservers();
+			}
+		});
+	}
+
+	@Override
+	public void addDiceSwitchFromRollToChosenObserver(Observer observer) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void addDiceSwitchFromChosenToRollObserver(Observer observer) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void addChooseScoreCategoryObserver(Observer observer) {
+		// TODO Auto-generated method stub
+		
+	}
+	
+	class ButtonObserver extends Observable {
+		public void click() {
+			setChanged();
+		}
 	}
 }

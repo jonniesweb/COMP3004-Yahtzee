@@ -7,6 +7,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import ca.jonsimpson.comp3004.yahtzee.DiceSet;
 import ca.jonsimpson.comp3004.yahtzee.Player;
 import ca.jonsimpson.comp3004.yahtzee.PointCategory;
@@ -14,6 +17,12 @@ import ca.jonsimpson.comp3004.yahtzee.PointCategory;
 public class ServerCommandServiceImpl extends UnicastRemoteObject implements ServerCommandService {
 
 	private static final long serialVersionUID = 6167309695864789937L;
+	
+	private static final Log log = LogFactory.getLog(ServerCommandServiceImpl.class);
+	
+	/**
+	 * Players, mapped by their sessionID.
+	 */
 	Map<String, ClientCommandService> clients = new HashMap<>();
 	
 	
@@ -40,10 +49,13 @@ public class ServerCommandServiceImpl extends UnicastRemoteObject implements Ser
 	}
 
 	@Override
-	public DiceSet rollDice(String sessionID, DiceSet dice) throws RemoteException,
+	public DiceSet rollDice(String sessionID) throws RemoteException,
 			NoMoreRollsException {
-		// TODO Auto-generated method stub
-		return null;
+		DiceSet diceSet = new DiceSet();
+		diceSet.init();
+		diceSet.rollDice();
+		log.info("rolled dice: " + diceSet.getDice());
+		return diceSet;
 	}
 
 	@Override
@@ -59,7 +71,6 @@ public class ServerCommandServiceImpl extends UnicastRemoteObject implements Ser
 		// TODO Auto-generated method stub
 		
 	}
-	
 	
 	
 }

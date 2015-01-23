@@ -1,5 +1,6 @@
 package ca.jonsimpson.comp3004.yahtzee;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -9,11 +10,11 @@ import java.util.Set;
 import java.util.TreeMap;
 import java.util.TreeSet;
 
-public class DiceSet {
+public class DiceSet implements Serializable {
 	private Random random = new Random();
 	
-	ArrayList<Integer> rolledDice = new ArrayList<Integer>(5);
-	ArrayList<Integer> savedDice = new ArrayList<Integer>(5);
+	private ArrayList<Integer> rolledDice = new ArrayList<Integer>(5);
+	private ArrayList<Integer> savedDice = new ArrayList<Integer>(5);
 	
 	public DiceSet() {
 	}
@@ -36,6 +37,14 @@ public class DiceSet {
 		for (int i = 0; i < size; i++) {
 			rolledDice.add(getRandomRoll());
 		}
+	}
+	
+	public List<Integer> getRolledDice() {
+		return rolledDice;
+	}
+	
+	public List<Integer> getSavedDice() {
+		return savedDice;
 	}
 	
 	public List<Integer> getDice() {
