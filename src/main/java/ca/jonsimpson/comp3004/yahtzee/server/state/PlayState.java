@@ -1,5 +1,8 @@
 package ca.jonsimpson.comp3004.yahtzee.server.state;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import ca.jonsimpson.comp3004.yahtzee.DiceSet;
 import ca.jonsimpson.comp3004.yahtzee.InvalidPointCategoryException;
 import ca.jonsimpson.comp3004.yahtzee.Player;
@@ -9,34 +12,28 @@ import ca.jonsimpson.comp3004.yahtzee.net.PointCategoryAlreadyTakenException;
 
 public class PlayState extends PlayerState {
 	
-	private PlayerStateContext context;
-	private Player player;
-	private int rolls = 0;
-	private DiceSet dice;
-
+	private static final Log log = LogFactory.getLog(PlayState.class);
+	
 	/**
 	 * Creates a new PlayState, initializing a blank set of dice
 	 * @param context
 	 */
-	public PlayState(PlayerStateContext context, Player player) {
+	public PlayState(PlayerStateContext context) {
 		this.context = context;
-		this.player = player;
-		dice = new DiceSet();
-		dice.init();
+		setDice(new DiceSet());
 	}
 	
 	/**
-	 * Rolls the dice until the three rolls are up
+	 * Rolls the dice, returning the result
 	 * @return
 	 * @throws NoMoreRollsException if you roll more than three times
 	 */
+	@Override
 	public DiceSet rollDice() throws NoMoreRollsException {
-		rolls++;
-		if (rolls > 2) {
-			dice.rollDice();
-			return dice;
-		} else
-			throw new NoMoreRollsException();
+			getDice().rollDice();
+			log.info("Player id [" + getPlayerId() + "] rolled " + getDice());
+			return getDice();
+			
 	}
 	
 	/**
@@ -44,16 +41,18 @@ public class PlayState extends PlayerState {
 	 * @param clientDice
 	 * @throws CheatingException if the client's dice differ from the servers
 	 */
+	@Override
 	public void chooseDice(DiceSet clientDice) throws CheatingException {
-		if (dice.equalsIgnoreOrder(clientDice)) {
-			dice = clientDice;
+		if (getDice().equalsIgnoreOrder(clientDice)) {
+			setDice(clientDice);
 		} else
 			throw new CheatingException();
 	}
 	
+	@Override
 	public void scoreDice(PointCategory category) {
 		try {
-			ServerContext.scorePlayer(player, category, dice);
+			ServerContext.scorePlayer(context.getPlayer(), category, getDice());
 		} catch (InvalidPointCategoryException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

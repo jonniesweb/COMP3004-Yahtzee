@@ -10,33 +10,51 @@ import java.util.Set;
 import java.util.TreeMap;
 import java.util.TreeSet;
 
+import ca.jonsimpson.comp3004.yahtzee.net.NoMoreRollsException;
+
 public class DiceSet implements Serializable {
 	private Random random = new Random();
 	
 	protected ArrayList<Integer> rolledDice = new ArrayList<Integer>(5);
 	protected ArrayList<Integer> savedDice = new ArrayList<Integer>(5);
+	protected int rollsLeft = 3;
 	
+	/**
+	 * Create a set of dice with no current values and three rolls.
+	 */
 	public DiceSet() {
 	}
 	
 	/**
 	 * Initialize a new set of five dice, all set to one.
 	 */
-	public void init() {
+	public void testInit() {
 		rolledDice.clear();
 		savedDice.clear();
 		
 		for (int i = 0; i < 5; i++) {
-			rolledDice.add(1);
+			rolledDice.add(0);
 		}
 	}
 	
-	public void rollDice() {
-		int size = rolledDice.size();
-		rolledDice.clear();
-		for (int i = 0; i < size; i++) {
-			rolledDice.add(getRandomRoll());
+	public void rollDice() throws NoMoreRollsException {
+		
+		// if there are no dice, add 5 dice
+		if (rolledDice.size() + savedDice.size() == 0) {
+			testInit();
 		}
+		
+		// roll the dice only if rolls are available
+		if (getRollsLeft() > 0) {
+			setRollsLeft(getRollsLeft() - 1);
+
+			int size = rolledDice.size();
+			rolledDice.clear();
+			for (int i = 0; i < size; i++) {
+				rolledDice.add(getRandomRoll());
+			}
+		} else
+			throw new NoMoreRollsException();
 	}
 	
 	public List<Integer> getRolledDice() {
@@ -100,34 +118,20 @@ public class DiceSet implements Serializable {
 	}
 	
 	public boolean equalsIgnoreOrder(DiceSet dice) {
-		return getSortedDice().equals(dice.getSortedDice());
-	}
-	
-	public static void main(String[] args) {
-		DiceSet diceSet = new DiceSet();
-		test(diceSet);
-		test(diceSet);
-		test(diceSet);
-		test(diceSet);
-		test(diceSet);
-		test(diceSet);
-		test(diceSet);
-		test(diceSet);
-		test(diceSet);
-		test(diceSet);
-		test(diceSet);
-		test(diceSet);
-		test(diceSet);
-		test(diceSet);
-		test(diceSet);
-		
+		return getSortedDice().equals(dice.getSortedDice())
+				&& dice.getRollsLeft() == getRollsLeft();
 	}
 
-	private static void test(DiceSet diceSet) {
-		diceSet.rollDice();
-		for (Integer integer : diceSet.rolledDice) {
-			System.out.print(integer);
-		}
-		System.out.println();
+	public int getRollsLeft() {
+		return rollsLeft;
+	}
+
+	public void setRollsLeft(int rollsLeft) {
+		this.rollsLeft = rollsLeft;
+	}
+
+	@Override
+	public String toString() {
+		return "Dice: " + getDice().toString() + " rolls left: " + getRollsLeft();
 	}
 }

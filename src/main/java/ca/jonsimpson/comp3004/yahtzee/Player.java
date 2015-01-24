@@ -24,6 +24,12 @@ public class Player implements Serializable {
 	 * referred to as "sessionID".
 	 */
 	private transient String secret;
+	
+	/**
+	 * The current {@link DiceSet} of the player
+	 */
+	private DiceSet dice;
+	
 
 	/**
 	 * Create a player with the given name.
@@ -49,6 +55,18 @@ public class Player implements Serializable {
 
 	public String getSecret() {
 		return secret;
+	}
+	
+	public void setSecret(String secret) {
+		this.secret = secret;
+	}
+
+	public DiceSet getDice() {
+		return dice;
+	}
+
+	public void setDice(DiceSet dice) {
+		this.dice = dice;
 	}
 
 }

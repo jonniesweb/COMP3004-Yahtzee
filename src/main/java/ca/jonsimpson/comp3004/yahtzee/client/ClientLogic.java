@@ -54,15 +54,28 @@ public class ClientLogic extends Observable {
 			public void update(Observable o, Object arg) {
 				try {
 					rollDice();
-				} catch (RemoteException | NoMoreRollsException e) {
+				} catch (RemoteException | NoMoreRollsException | IllegalAccessException e) {
 					e.printStackTrace();
+				}
+			}
+		});
+		
+		view.addDiceSwitchFromChosenToRollObserver(new Observer() {
+			@Override
+			public void update(Observable o, Object arg) {
+				if (arg instanceof String) {
+					int die = Integer.parseInt((String) arg);
+					
+					// XXX todo
+//					service.
+					
 				}
 			}
 		});
 		
 	}
 
-	public void rollDice() throws RemoteException, NoMoreRollsException {
+	public void rollDice() throws RemoteException, NoMoreRollsException, IllegalAccessException {
 		DiceSet dice = service.rollDice(sessionID);
 		view.updateDice(dice);
 		log.info("rolled dice: " + dice.getDice());

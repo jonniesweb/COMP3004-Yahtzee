@@ -30,6 +30,7 @@ public class Gameboard extends JFrame implements IView {
 	private final JPanel panelSelectedDice = new JPanel();
 	private final JButton btnRoll = new JButton("Roll");
 	private final JSeparator separator = new JSeparator();
+	private DoWhatISayObservable chosenToRollObserver;
 	
 	/**
 	 * Create the frame.
@@ -76,8 +77,25 @@ public class Gameboard extends JFrame implements IView {
 	
 	private void addDieToRolledDice(JButton die) {
 		panelRolledDice.add(die);
+		
+		// add an action listener to move the die to rolled dice
+		// notify the server of the new DiceSet
+		die.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				moveDieToRolled(die);
+			}
+		});
 	}
 	
+	protected void moveDieToRolled(JButton die) {
+		panelSelectedDice.remove(die);
+		panelSelectedDice.add(die);
+
+		// notify the controller
+		chosenToRollObserver.doIt(die.getText());
+	}
+
 	/**
 	 * Update the view with the given {@link DiceSet}
 	 * @param dice
@@ -136,8 +154,8 @@ public class Gameboard extends JFrame implements IView {
 
 	@Override
 	public void addDiceSwitchFromChosenToRollObserver(Observer observer) {
-		// TODO Auto-generated method stub
-		
+		chosenToRollObserver = new DoWhatISayObservable();
+		chosenToRollObserver.addObserver(observer);
 	}
 
 	@Override
@@ -150,6 +168,10 @@ public class Gameboard extends JFrame implements IView {
 		public void doIt() {
 			setChanged();
 			notifyObservers();
+		}
+		public void doIt(Object o) {
+			setChanged();
+			notifyObservers(o);
 		}
 	}
 }

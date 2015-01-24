@@ -2,6 +2,7 @@ package ca.jonsimpson.comp3004.yahtzee.net;
 
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -13,6 +14,8 @@ import org.apache.commons.logging.LogFactory;
 import ca.jonsimpson.comp3004.yahtzee.DiceSet;
 import ca.jonsimpson.comp3004.yahtzee.Player;
 import ca.jonsimpson.comp3004.yahtzee.PointCategory;
+import ca.jonsimpson.comp3004.yahtzee.server.state.PlayState;
+import ca.jonsimpson.comp3004.yahtzee.server.state.PlayerStateContext;
 
 public class ServerCommandServiceImpl extends UnicastRemoteObject implements ServerCommandService {
 
@@ -23,7 +26,7 @@ public class ServerCommandServiceImpl extends UnicastRemoteObject implements Ser
 	/**
 	 * Players, mapped by their sessionID.
 	 */
-	Map<String, ClientCommandService> clients = new HashMap<>();
+	Map<String, PlayerStateContext> players = new HashMap<>();
 	
 	
 	public ServerCommandServiceImpl() throws RemoteException {
@@ -37,25 +40,41 @@ public class ServerCommandServiceImpl extends UnicastRemoteObject implements Ser
 
 	@Override
 	public void connect(String sessionID, Player player, ClientCommandService client) {
-		new Player(player.getId(), player.getName(), sessionID);
+		log.info("Player id [" + player.getId() + "] connected");
 		
-		clients.put(sessionID, client);
+		player.setSecret(sessionID);
+		
+		// create a new state context for the user. This could be extended to
+		// provide spectators to join
+		PlayerStateContext playerStateContext = new PlayerStateContext(player, client);
+		
+		players.put(sessionID, playerStateContext);
+		
+		// XXX testing
+		playerStateContext.setState(new PlayState(playerStateContext));
 	}
 
 	@Override
 	public List<Player> getPlayers() throws RemoteException {
-		// TODO Auto-generated method stub
-		return null;
+		ArrayList<Player> list = new ArrayList<Player>(players.size());
+		for (PlayerStateContext context : players.values()) {
+			list.add(context.getPlayer());
+		}
+		return list;
 	}
 
 	@Override
 	public DiceSet rollDice(String sessionID) throws RemoteException,
-			NoMoreRollsException {
-		DiceSet diceSet = new DiceSet();
-		diceSet.init();
-		diceSet.rollDice();
-		log.info("rolled dice: " + diceSet.getDice());
-		return diceSet;
+			NoMoreRollsException, IllegalAccessException {
+		
+		PlayerStateContext player = players.get(sessionID);
+		return player.getState().rollDice();
+		
+//		DiceSet diceSet = new DiceSet();
+//		diceSet.init();
+//		diceSet.rollDice();
+//		log.info("rolled dice: " + diceSet.getDice());
+//		return diceSet;
 	}
 
 	@Override
@@ -70,6 +89,12 @@ public class ServerCommandServiceImpl extends UnicastRemoteObject implements Ser
 			PointCategoryAlreadyTakenException {
 		// TODO Auto-generated method stub
 		
+	}
+
+	@Override
+	public void moveDice(String sessionID, DiceSet dice) throws RemoteException {
+//		Player player = players.get(sessionID);
+//		player.set
 	}
 	
 	
