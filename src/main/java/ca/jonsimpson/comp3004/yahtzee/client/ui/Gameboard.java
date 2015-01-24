@@ -112,15 +112,18 @@ public class Gameboard extends JFrame implements IView {
 	@Override
 	public void addRollDiceObserver(Observer observer) {
 		
+		addObserverToButton(observer, btnRoll);
+	}
+
+	private void addObserverToButton(Observer observer, JButton button) {
 		// on roll button press, notify the observers
-		ButtonObserver observable = new ButtonObserver();
+		DoWhatISayObservable observable = new DoWhatISayObservable();
 		observable.addObserver(observer);
-		btnRoll.addActionListener(new ActionListener() {
+		button.addActionListener(new ActionListener() {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				observable.click();
-				observable.notifyObservers();
+				observable.doIt();
 			}
 		});
 	}
@@ -143,9 +146,10 @@ public class Gameboard extends JFrame implements IView {
 		
 	}
 	
-	class ButtonObserver extends Observable {
-		public void click() {
+	class DoWhatISayObservable extends Observable {
+		public void doIt() {
 			setChanged();
+			notifyObservers();
 		}
 	}
 }

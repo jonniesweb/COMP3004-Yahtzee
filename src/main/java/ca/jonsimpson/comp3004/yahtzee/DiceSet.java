@@ -13,8 +13,8 @@ import java.util.TreeSet;
 public class DiceSet implements Serializable {
 	private Random random = new Random();
 	
-	private ArrayList<Integer> rolledDice = new ArrayList<Integer>(5);
-	private ArrayList<Integer> savedDice = new ArrayList<Integer>(5);
+	protected ArrayList<Integer> rolledDice = new ArrayList<Integer>(5);
+	protected ArrayList<Integer> savedDice = new ArrayList<Integer>(5);
 	
 	public DiceSet() {
 	}
