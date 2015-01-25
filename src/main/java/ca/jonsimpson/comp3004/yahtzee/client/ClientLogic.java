@@ -8,10 +8,6 @@ import java.util.Observable;
 import java.util.Observer;
 import java.util.Random;
 import java.util.UUID;
-import java.util.logging.LogManager;
-import java.util.logging.Logger;
-
-import javax.xml.XMLConstants;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;

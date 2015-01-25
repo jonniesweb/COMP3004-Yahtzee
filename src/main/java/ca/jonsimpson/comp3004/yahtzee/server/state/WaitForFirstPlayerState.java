@@ -19,6 +19,7 @@ public class WaitForFirstPlayerState extends ServerState {
 	public void connect(String sessionID, Player player,
 			ClientCommandService client) {
 		getContext().connect(sessionID, player, client);
+		getContext().setState(new CountdownUntilStartState(getContext()));
 	}
 
 	@Override
@@ -26,4 +27,8 @@ public class WaitForFirstPlayerState extends ServerState {
 		return getContext().getPlayerList();
 	}
 
+	@Override
+	public String toString() {
+		return "WaitForFirstPlayerState";
+	}
 }

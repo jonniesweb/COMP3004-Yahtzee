@@ -5,7 +5,6 @@ import org.apache.commons.logging.LogFactory;
 
 import ca.jonsimpson.comp3004.yahtzee.DiceSet;
 import ca.jonsimpson.comp3004.yahtzee.InvalidPointCategoryException;
-import ca.jonsimpson.comp3004.yahtzee.Player;
 import ca.jonsimpson.comp3004.yahtzee.PointCategory;
 import ca.jonsimpson.comp3004.yahtzee.net.NoMoreRollsException;
 import ca.jonsimpson.comp3004.yahtzee.net.PointCategoryAlreadyTakenException;
@@ -61,6 +60,11 @@ public class PlayState extends PlayerState {
 			e.printStackTrace();
 		}
 		context.setState(new IdleState(context));
+	}
+	
+	@Override
+	public String toString() {
+		return "PlayState";
 	}
 
 }

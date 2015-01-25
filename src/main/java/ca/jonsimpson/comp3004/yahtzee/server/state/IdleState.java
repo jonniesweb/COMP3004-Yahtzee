@@ -6,4 +6,9 @@ public class IdleState extends PlayerState {
 	public IdleState(PlayerContext context) {
 		this.context = context;
 	}
+	
+	@Override
+	public String toString() {
+		return "IdleState";
+	}
 }

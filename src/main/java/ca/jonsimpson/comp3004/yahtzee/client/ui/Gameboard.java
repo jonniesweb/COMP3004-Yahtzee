@@ -3,7 +3,6 @@ package ca.jonsimpson.comp3004.yahtzee.client.ui;
 import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.rmi.RemoteException;
 import java.util.Observable;
 import java.util.Observer;
 
@@ -19,9 +18,7 @@ import javax.swing.border.EmptyBorder;
 import net.miginfocom.swing.MigLayout;
 import ca.jonsimpson.comp3004.yahtzee.DiceSet;
 import ca.jonsimpson.comp3004.yahtzee.ScoreCard;
-import ca.jonsimpson.comp3004.yahtzee.client.ClientLogic;
 import ca.jonsimpson.comp3004.yahtzee.main.IView;
-import ca.jonsimpson.comp3004.yahtzee.net.NoMoreRollsException;
 
 public class Gameboard extends JFrame implements IView {
 	

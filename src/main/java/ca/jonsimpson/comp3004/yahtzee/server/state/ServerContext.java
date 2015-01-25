@@ -1,6 +1,5 @@
 package ca.jonsimpson.comp3004.yahtzee.server.state;
 
-import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -26,7 +25,7 @@ public class ServerContext {
 	/**
 	 * Players, mapped by their sessionID
 	 */
-	private Map<String, PlayerContext> players = new HashMap<>();
+	private Map<String, PlayerContext> players = new HashMap<String, PlayerContext>();
 	private static ScoreCard scoreCard;
 	
 	private ServerState state;
@@ -93,6 +92,7 @@ public class ServerContext {
 
 	public void setState(ServerState state) {
 		this.state = state;
+		log.info("Set ServerState to " + getState());
 	}
 
 	public void clearPlayerContexts() {

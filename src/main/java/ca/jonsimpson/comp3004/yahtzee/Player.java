@@ -69,4 +69,8 @@ public class Player implements Serializable {
 		this.dice = dice;
 	}
 
+	@Override
+	public String toString() {
+		return "Player id [" + getId() + "] name [" + getName() + "]";
+	}
 }

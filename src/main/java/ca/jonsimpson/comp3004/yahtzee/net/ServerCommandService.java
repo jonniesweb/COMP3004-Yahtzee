@@ -2,7 +2,6 @@ package ca.jonsimpson.comp3004.yahtzee.net;
 
 import java.rmi.Remote;
 import java.rmi.RemoteException;
-import java.util.Date;
 import java.util.List;
 
 import ca.jonsimpson.comp3004.yahtzee.DiceSet;
