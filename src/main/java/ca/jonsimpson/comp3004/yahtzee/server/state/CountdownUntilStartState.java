@@ -23,7 +23,7 @@ public class CountdownUntilStartState extends ServerState {
 		
 		// create a new timer to switch the state to GameRunningState after
 		// 30 seconds
-		int timeout = (int) YahtzeeConfig.getInstance().getOrDefault("GameStartWaitPeriodMillis", 30000);
+		int timeout = YahtzeeConfig.getInstance().getInteger("GameStartWaitPeriodMillis", 30000);
 		Timer timer = new Timer(timeout, e -> getContext().setState(
 				new GameRunningState(getContext()))); 
 		timer.start();

@@ -54,4 +54,20 @@ public class YahtzeeConfig extends Properties {
 			return super.getProperty(key);
 	}
 	
+	public int getInteger(String key, int defaultValue) {
+		String result = getProperty(key);
+		if (result != null) {
+			return Integer.parseInt(result);
+		} else
+			return defaultValue;
+	}
+	
+	public boolean getBoolean(String key, boolean defaultValue) {
+		String result = getProperty(key);
+		if (result != null) {
+			return Boolean.parseBoolean(result);
+		} else
+			return defaultValue;
+	}
+	
 }
