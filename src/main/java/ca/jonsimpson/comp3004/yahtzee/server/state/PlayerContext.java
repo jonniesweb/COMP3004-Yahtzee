@@ -3,13 +3,13 @@ package ca.jonsimpson.comp3004.yahtzee.server.state;
 import ca.jonsimpson.comp3004.yahtzee.Player;
 import ca.jonsimpson.comp3004.yahtzee.net.ClientCommandService;
 
-public class PlayerStateContext {
+public class PlayerContext {
 	
 	private Player player;
 	private PlayerState state;
 	private ClientCommandService service;
 	
-	public PlayerStateContext(Player player, ClientCommandService service) {
+	public PlayerContext(Player player, ClientCommandService service) {
 		this.player = player;
 		this.service = service;
 		state = new IdleState(this);

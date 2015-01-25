@@ -6,21 +6,21 @@ import ca.jonsimpson.comp3004.yahtzee.net.NoMoreRollsException;
 
 public abstract class PlayerState {
 
-	protected PlayerStateContext context;
+	protected PlayerContext context;
 
-	public void scoreDice(PointCategory category) {}
+	public void chooseCategory(PointCategory category) {}
 
-	public void chooseDice(DiceSet clientDice) throws CheatingException {}
+	public void moveDice(DiceSet clientDice) throws CheatingException {}
 
 	public DiceSet rollDice() throws NoMoreRollsException, IllegalAccessException {
 		throw new IllegalAccessException();
 	}
 
-	public PlayerStateContext getContext() {
+	public PlayerContext getContext() {
 		return context;
 	}
 
-	public void setContext(PlayerStateContext context) {
+	public void setContext(PlayerContext context) {
 		this.context = context;
 	}
 	

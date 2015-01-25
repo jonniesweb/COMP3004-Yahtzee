@@ -42,9 +42,6 @@ public class YahtzeeClient {
 			service.connect(sessionID, player, new ClientCommandServiceImpl());
 			log.info("Successfully connected to the server");
 
-			Date today = service.getRemoteDate();
-			System.out.println(today);
-			
 		} catch (RemoteException e) {
 			log.error("Unable to connect to the server", e);
 		} catch (NotBoundException e) {

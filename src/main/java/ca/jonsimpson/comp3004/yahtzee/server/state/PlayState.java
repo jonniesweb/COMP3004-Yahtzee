@@ -18,7 +18,7 @@ public class PlayState extends PlayerState {
 	 * Creates a new PlayState, initializing a blank set of dice
 	 * @param context
 	 */
-	public PlayState(PlayerStateContext context) {
+	public PlayState(PlayerContext context) {
 		this.context = context;
 		setDice(new DiceSet());
 	}
@@ -42,7 +42,7 @@ public class PlayState extends PlayerState {
 	 * @throws CheatingException if the client's dice differ from the servers
 	 */
 	@Override
-	public void chooseDice(DiceSet clientDice) throws CheatingException {
+	public void moveDice(DiceSet clientDice) throws CheatingException {
 		if (getDice().equalsIgnoreOrder(clientDice)) {
 			setDice(clientDice);
 		} else
@@ -50,7 +50,7 @@ public class PlayState extends PlayerState {
 	}
 	
 	@Override
-	public void scoreDice(PointCategory category) {
+	public void chooseCategory(PointCategory category) {
 		try {
 			ServerContext.scorePlayer(context.getPlayer(), category, getDice());
 		} catch (InvalidPointCategoryException e) {
