@@ -1,14 +1,16 @@
 package ca.jonsimpson.comp3004.yahtzee.server.state;
 
 import ca.jonsimpson.comp3004.yahtzee.DiceSet;
+import ca.jonsimpson.comp3004.yahtzee.InvalidPointCategoryException;
 import ca.jonsimpson.comp3004.yahtzee.PointCategory;
 import ca.jonsimpson.comp3004.yahtzee.net.NoMoreRollsException;
+import ca.jonsimpson.comp3004.yahtzee.net.PointCategoryAlreadyTakenException;
 
 public abstract class PlayerState {
 
 	protected PlayerContext context;
 
-	public void chooseCategory(PointCategory category) {}
+	public void chooseCategory(PointCategory category) throws PointCategoryAlreadyTakenException, InvalidPointCategoryException {}
 
 	public void moveDice(DiceSet clientDice) throws CheatingException {}
 

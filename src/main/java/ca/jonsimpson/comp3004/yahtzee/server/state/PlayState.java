@@ -49,17 +49,11 @@ public class PlayState extends PlayerState {
 	}
 	
 	@Override
-	public void chooseCategory(PointCategory category) {
-		try {
-			ServerContext.scorePlayer(context.getPlayer(), category, getDice());
-		} catch (InvalidPointCategoryException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (PointCategoryAlreadyTakenException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+	public void chooseCategory(PointCategory category) throws PointCategoryAlreadyTakenException, InvalidPointCategoryException {
+		ServerContext.scorePlayer(context.getPlayer(), category, getDice());
+		
 		context.setState(new IdleState(context));
+		getContext().getServerContext().updateClientScoreCards();
 	}
 	
 	@Override

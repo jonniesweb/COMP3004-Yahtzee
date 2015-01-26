@@ -13,11 +13,14 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import ca.jonsimpson.comp3004.yahtzee.DiceSet;
+import ca.jonsimpson.comp3004.yahtzee.InvalidPointCategoryException;
 import ca.jonsimpson.comp3004.yahtzee.Player;
+import ca.jonsimpson.comp3004.yahtzee.PointCategory;
 import ca.jonsimpson.comp3004.yahtzee.client.ui.Gameboard;
 import ca.jonsimpson.comp3004.yahtzee.main.IView;
 import ca.jonsimpson.comp3004.yahtzee.net.ClientCommandServiceImpl;
 import ca.jonsimpson.comp3004.yahtzee.net.NoMoreRollsException;
+import ca.jonsimpson.comp3004.yahtzee.net.PointCategoryAlreadyTakenException;
 import ca.jonsimpson.comp3004.yahtzee.net.ServerCommandService;
 import ca.jonsimpson.comp3004.yahtzee.server.state.CheatingException;
 
@@ -87,6 +90,24 @@ public class ClientLogic extends Observable {
 					
 					// update the server and view
 					moveDice();
+				}
+			}
+		});
+		
+		/*
+		 * When a category is clicked, notify the server of the choice.
+		 */
+		view.addScoreCategoryObserver(new Observer() {
+			@Override
+			public void update(Observable o, Object arg) {
+				if (arg instanceof PointCategory) {
+					PointCategory category = (PointCategory) arg;
+					
+					try {
+						service.chooseCategory(sessionID, category);
+					} catch (RemoteException | PointCategoryAlreadyTakenException | InvalidPointCategoryException e) {
+						log.error("Unable to choose category for points", e);
+					}
 				}
 			}
 		});

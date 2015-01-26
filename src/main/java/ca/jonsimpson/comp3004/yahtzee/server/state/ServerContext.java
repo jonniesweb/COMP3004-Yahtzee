@@ -1,6 +1,8 @@
 package ca.jonsimpson.comp3004.yahtzee.server.state;
 
+import java.rmi.RemoteException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -68,7 +70,7 @@ public class ServerContext {
 		
 		// create a new state context for the user. This could be extended to
 		// provide spectators to join
-		PlayerContext playerStateContext = new PlayerContext(player, client);
+		PlayerContext playerStateContext = new PlayerContext(player, client, this);
 		
 		getPlayers().put(sessionID, playerStateContext);
 		
@@ -97,6 +99,22 @@ public class ServerContext {
 
 	public void clearPlayerContexts() {
 		players = new HashMap<String, PlayerContext>();
+	}
+
+	public void updateClientScoreCards() {
+		for (PlayerContext client : players.values()) {
+			try {
+				client.getService().updateScoreCard(scoreCard);
+			} catch (RemoteException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+	}
+
+	protected Collection<PlayerContext> getAllPlayerContexts(ServerState serverState) {
+		Collection<PlayerContext> players = serverState.getContext().getPlayers().values();
+		return players;
 	}
 	
 	

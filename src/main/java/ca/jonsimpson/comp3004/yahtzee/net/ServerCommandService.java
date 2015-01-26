@@ -5,6 +5,7 @@ import java.rmi.RemoteException;
 import java.util.List;
 
 import ca.jonsimpson.comp3004.yahtzee.DiceSet;
+import ca.jonsimpson.comp3004.yahtzee.InvalidPointCategoryException;
 import ca.jonsimpson.comp3004.yahtzee.Player;
 import ca.jonsimpson.comp3004.yahtzee.PointCategory;
 import ca.jonsimpson.comp3004.yahtzee.server.state.CheatingException;
@@ -67,7 +68,8 @@ public interface ServerCommandService extends Remote {
 	 * @param category
 	 * @throws RemoteException
 	 * @throws PointCategoryAlreadyTakenException
+	 * @throws InvalidPointCategoryException 
 	 */
-	public void chooseCategory(String sessionID, PointCategory category) throws RemoteException, PointCategoryAlreadyTakenException;
+	public void chooseCategory(String sessionID, PointCategory category) throws RemoteException, PointCategoryAlreadyTakenException, InvalidPointCategoryException;
 	
 }

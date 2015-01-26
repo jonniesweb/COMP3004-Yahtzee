@@ -1,6 +1,5 @@
 package ca.jonsimpson.comp3004.yahtzee.server.state;
 
-import java.util.Collection;
 import java.util.List;
 
 import org.apache.commons.logging.Log;
@@ -45,11 +44,6 @@ public abstract class ServerState {
 
 	public ServerContext getContext() {
 		return context;
-	}
-
-	protected Collection<PlayerContext> getAllPlayerContexts() {
-		Collection<PlayerContext> players = getContext().getPlayers().values();
-		return players;
 	}
 	
 }

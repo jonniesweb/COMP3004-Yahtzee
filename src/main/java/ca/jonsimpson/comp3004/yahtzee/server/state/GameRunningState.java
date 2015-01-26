@@ -18,7 +18,7 @@ public class GameRunningState extends ServerState {
 		 * Set the players state to PlayState and notify the clients
 		 */
 		log.info("Notifying all players that the game has started");
-		for (PlayerContext playerContext : getAllPlayerContexts()) {
+		for (PlayerContext playerContext : context.getAllPlayerContexts(this)) {
 			try {
 				playerContext.setState(new PlayState(playerContext));
 				playerContext.getService().gameStarted();
@@ -38,7 +38,7 @@ public class GameRunningState extends ServerState {
 		/**
 		 * Set each players state to PlayState and notify the clients
 		 */
-		for (PlayerContext playerContext : getAllPlayerContexts()) {
+		for (PlayerContext playerContext : getContext().getAllPlayerContexts(this)) {
 			try {
 				playerContext.setState(new PlayState(playerContext));
 				playerContext.getService().roundStarted();
@@ -55,7 +55,7 @@ public class GameRunningState extends ServerState {
 		 * Notify the clients that the game is over and destroy all
 		 * PlayerContexts
 		 */
-		for (PlayerContext playerContext : getAllPlayerContexts()) {
+		for (PlayerContext playerContext : getContext().getAllPlayerContexts(this)) {
 			try {
 				playerContext.setState(new IdleState(playerContext));
 				playerContext.getService().gameEnded();

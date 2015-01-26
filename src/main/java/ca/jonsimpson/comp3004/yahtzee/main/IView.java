@@ -16,6 +16,6 @@ public interface IView {
 	public void addRollDiceObserver(Observer observer);
 	public void addDiceSwitchFromRolledToSavedObserver(Observer observer);
 	public void addDiceSwitchFromSavedToRolledObserver(Observer observer);
-	public void addChooseScoreCategoryObserver(Observer observer);
+	public void addScoreCategoryObserver(Observer observer);
 	
 }

@@ -8,6 +8,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import ca.jonsimpson.comp3004.yahtzee.DiceSet;
+import ca.jonsimpson.comp3004.yahtzee.InvalidPointCategoryException;
 import ca.jonsimpson.comp3004.yahtzee.Player;
 import ca.jonsimpson.comp3004.yahtzee.PointCategory;
 import ca.jonsimpson.comp3004.yahtzee.server.state.CheatingException;
@@ -53,7 +54,7 @@ public class ServerCommandServiceImpl extends UnicastRemoteObject implements Ser
 
 	@Override
 	public void chooseCategory(String sessionID, PointCategory category) throws RemoteException,
-			PointCategoryAlreadyTakenException {
+			PointCategoryAlreadyTakenException, InvalidPointCategoryException {
 		getContextFromSessionID(sessionID).getState().chooseCategory(category);
 		
 	}

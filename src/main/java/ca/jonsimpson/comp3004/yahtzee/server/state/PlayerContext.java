@@ -13,10 +13,12 @@ public class PlayerContext {
 	private Player player;
 	private PlayerState state;
 	private ClientCommandService service;
+	private ServerContext serverContext;
 	
-	public PlayerContext(Player player, ClientCommandService service) {
+	public PlayerContext(Player player, ClientCommandService service, ServerContext serverContext) {
 		this.player = player;
 		this.service = service;
+		this.serverContext = serverContext;
 		state = new IdleState(this);
 		
 		log.info("Created a new PlayerContext for " + player + " with state " + state);
@@ -42,5 +44,9 @@ public class PlayerContext {
 	public void setService(ClientCommandService service) {
 		this.service = service;
 	}
-	
+
+	public ServerContext getServerContext() {
+		return serverContext;
+	}
+
 }

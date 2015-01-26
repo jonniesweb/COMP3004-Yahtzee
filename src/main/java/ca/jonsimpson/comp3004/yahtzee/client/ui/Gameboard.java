@@ -7,6 +7,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Observable;
 import java.util.Observer;
+import java.util.Random;
 
 import javax.swing.AbstractButton;
 import javax.swing.JButton;
@@ -20,6 +21,7 @@ import javax.swing.border.EmptyBorder;
 
 import net.miginfocom.swing.MigLayout;
 import ca.jonsimpson.comp3004.yahtzee.DiceSet;
+import ca.jonsimpson.comp3004.yahtzee.PointCategory;
 import ca.jonsimpson.comp3004.yahtzee.ScoreCard;
 import ca.jonsimpson.comp3004.yahtzee.main.IView;
 
@@ -29,12 +31,14 @@ import java.awt.Component;
 
 public class Gameboard extends JFrame implements IView {
 	
+	private static final String CHECKMARK = "✓";
 	private JPanel contentPane;
 	private final JPanel panelRolledDice = new JPanel();
 	private final JPanel panelSelectedDice = new JPanel();
 	private final JButton btnRoll = new JButton("Roll");
-	private ActionListener savedToRolledActionListener;
-	private ActionListener rolledToSavedActionListener;
+	private static ActionListener savedToRolledActionListener;
+	private static ActionListener rolledToSavedActionListener;
+	private static ActionListener scoreCardActionListener;
 	private final JPanel panel = new JPanel();
 	private final JLabel lblOnes = new JLabel("Ones");
 	private final JLabel lblTwos = new JLabel("Twos");
@@ -52,22 +56,22 @@ public class Gameboard extends JFrame implements IView {
 	private final JLabel lblYahtzeeBonus = new JLabel("YAHTZEE Bonus");
 	private final JLabel lblNewLabel = new JLabel("Rolling");
 	private final JLabel lblChosen = new JLabel("Chosen");
-	private final JButton btn_ones = createScoreCardButton("s");
-	private final JButton btn_twos = createScoreCardButton("");
-	private final JButton button_1 = createScoreCardButton("");
-	private final JButton btnFours = createScoreCardButton("3");
-	private final JButton btnFives = createScoreCardButton("");
-	private final JButton btnSixes = createScoreCardButton("");
-	private final JButton btn3OfAKind = createScoreCardButton("");
-	private final JButton btn4OfAKind = createScoreCardButton("");
-	private final JButton btnFullHouse = createScoreCardButton("");
-	private final JButton btnSmallStraight = createScoreCardButton("");
-	private final JButton btnLargeStraight = createScoreCardButton("");
-	private final JButton btnYahtzee = createScoreCardButton("");
-	private final JButton btnChance = createScoreCardButton("");
-	private final JButton btnYahtzeeBonus1 = createScoreCardButton("\u2713");
-	private final JButton btnYahtzeeBonus2 = createScoreCardButton("✓");
-	private final JButton btnYahtzeeBonus3 = createScoreCardButton("✓");
+	private final JButton btnOnes = createScoreCardButton("", PointCategory.ONES);
+	private final JButton btnTwos = createScoreCardButton("", PointCategory.TWOS);
+	private final JButton btnThrees = createScoreCardButton("", PointCategory.THREES);
+	private final JButton btnFours = createScoreCardButton("", PointCategory.FOURS);
+	private final JButton btnFives = createScoreCardButton("", PointCategory.FIVES);
+	private final JButton btnSixes = createScoreCardButton("", PointCategory.SIXES);
+	private final JButton btn3OfAKind = createScoreCardButton("", PointCategory.THREE_KIND);
+	private final JButton btn4OfAKind = createScoreCardButton("", PointCategory.FOUR_KIND);
+	private final JButton btnFullHouse = createScoreCardButton("", PointCategory.FULL_HOUSE);
+	private final JButton btnSmallStraight = createScoreCardButton("", PointCategory.SMALL_STRAIGHT);
+	private final JButton btnLargeStraight = createScoreCardButton("", PointCategory.LARGE_STRAIGHT);
+	private final JButton btnYahtzee = createScoreCardButton("", PointCategory.YAHTZEE);
+	private final JButton btnChance = createScoreCardButton("", PointCategory.CHANCE);
+	private final JButton btnYahtzeeBonus1 = createScoreCardButton("", PointCategory.BONUS_1);
+	private final JButton btnYahtzeeBonus2 = createScoreCardButton("", PointCategory.BONUS_2);
+	private final JButton btnYahtzeeBonus3 = createScoreCardButton("", PointCategory.BONUS_3);
 	
 	/**
 	 * Create the frame.
@@ -79,7 +83,7 @@ public class Gameboard extends JFrame implements IView {
 
 	private void init() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 785, 411);
+		setBounds(100, 100, 785, 498);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
@@ -91,19 +95,19 @@ public class Gameboard extends JFrame implements IView {
 		contentPane.add(panelRolledDice, "cell 0 1,grow");
 		
 		contentPane.add(panel, "cell 2 0 1 7,grow");
-		panel.setLayout(new MigLayout("", "[][14.00][14.00][14.00]", "[][][][][][][2px][][][][][][][][]"));
+		panel.setLayout(new MigLayout("", "[][14.00][14.00][14.00]", "[25px:n,center][25px:n,center][25px:n,center][25px:n,center][25px:n,center][25px:n,center][2px][25px:n,center][25px:n,center][25px:n,center][25px:n,center][25px:n,center][25px:n,center][25px:n,center][25px:n,center]"));
 		
 		panel.add(lblOnes, "cell 0 0");
 		
-		panel.add(btn_ones, "cell 1 0 3 1,growx");
+		panel.add(btnOnes, "cell 1 0 3 1,growx");
 		
 		panel.add(lblTwos, "cell 0 1");
 		
-		panel.add(btn_twos, "cell 1 1 3 1,growx");
+		panel.add(btnTwos, "cell 1 1 3 1,growx");
 		
 		panel.add(lblThrees, "cell 0 2");
 		
-		panel.add(button_1, "cell 1 2 3 1,growx");
+		panel.add(btnThrees, "cell 1 2 3 1,growx");
 		
 		panel.add(lblFours, "cell 0 3");
 		
@@ -140,7 +144,6 @@ public class Gameboard extends JFrame implements IView {
 		panel.add(lblYahtzee, "cell 0 12");
 		
 		panel.add(btnYahtzee, "cell 1 12 3 1,growx");
-		lblChance.setAlignmentX(Component.CENTER_ALIGNMENT);
 		
 		panel.add(lblChance, "cell 0 13");
 		
@@ -265,9 +268,24 @@ public class Gameboard extends JFrame implements IView {
 		}
 
 	@Override
-	public void addChooseScoreCategoryObserver(Observer observer) {
-		// TODO Auto-generated method stub
+	public void addScoreCategoryObserver(Observer observer) {
+		DoWhatISayObservable observable = new DoWhatISayObservable();
+		observable.addObserver(observer);
 		
+		/*
+		 * Create an ActionListener that will notify the server whenever the
+		 * user clicks one of the categories.
+		 */
+		scoreCardActionListener = new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				if (e.getSource() instanceof ScoreCardButton) {
+					ScoreCardButton button = (ScoreCardButton) e.getSource();
+					PointCategory pointCategory = button.getCategory();
+					observable.doIt(pointCategory);
+				}
+			}
+		};
 	}
 
 	private void addDieToSelectedDice(JButton die) {
@@ -298,29 +316,39 @@ public class Gameboard extends JFrame implements IView {
 	/**
 	 * @wbp.factory
 	 * @wbp.factory.parameter.source text ""
+	 * @wbp.factory.parameter.source category null
 	 */
-	public static JButton createScoreCardButton(String text) {
+	public static JButton createScoreCardButton(String text, PointCategory category) {
 		JButton button = new JButton(text);
 		button.setFocusable(false);
 		int xy = 30;
 		button.setPreferredSize(new Dimension(xy, xy));
 		button.setBackground(new Color(255, 255, 255));
 		button.setMargin(new Insets(2, 2, 2, 2));
+		button.addActionListener(scoreCardActionListener);
 		return button;
 	}
 	
-	/**
-	 * @wbp.factory
-	 * @wbp.factory.parameter.source text ""
-	 */
-	public static JButton createScoreCardBonusButton(String text) {
-		JButton button = new JButton(text);
-		button.setFocusable(false);
-		int xy = 30;
-		button.setPreferredSize(new Dimension(40, xy));
-		button.setBackground(new Color(255, 255, 255, 0));
-		button.setMargin(new Insets(2, 2, 2, 2));
-		return button;
-	}
+	class ScoreCardButton extends JButton {
+		private PointCategory category;
 
+		public ScoreCardButton(String text, PointCategory category) {
+			super(text);
+			this.category = category;
+			
+		}
+
+		public PointCategory getCategory() {
+			return category;
+		}
+
+		public Color getColour() {
+			return getBackground();
+		}
+
+		public void setColour(Color colour) {
+			setBackground(colour);
+		}
+	}
+	
 }
