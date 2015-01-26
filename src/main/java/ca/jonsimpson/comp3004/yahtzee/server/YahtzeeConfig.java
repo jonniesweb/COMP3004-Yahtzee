@@ -1,6 +1,5 @@
 package ca.jonsimpson.comp3004.yahtzee.server;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
 
@@ -30,8 +29,8 @@ public class YahtzeeConfig extends Properties {
 			load(inputStream);
 			log.info("Successfully loaded settings from " + YAHTZEE_CONFIG_FILENAME);
 			
-		} catch (IOException e) {
-			log.error("No \"" + YAHTZEE_CONFIG_FILENAME + "\" file found on classpath. Using defaults", e);
+		} catch (Exception e) {
+			log.warn("No \"" + YAHTZEE_CONFIG_FILENAME + "\" file found on classpath. Using defaults");
 		}
 		
 	}
