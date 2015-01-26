@@ -153,6 +153,7 @@ public class ClientLogic {
 	
 	public DiceSet getCurrentDice() {
 		return currentDice;
+		
 	}
 
 	public void setCurrentDice(DiceSet currentDice) {
@@ -165,6 +166,10 @@ public class ClientLogic {
 
 	public void setView(IView view) {
 		this.view = view;
+	}
+
+	public void roundStarted() {
+		setCurrentDice(new DiceSet());
 	}
 	
 }

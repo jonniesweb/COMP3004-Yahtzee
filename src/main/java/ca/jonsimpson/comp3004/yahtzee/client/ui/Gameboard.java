@@ -194,6 +194,22 @@ public class Gameboard extends JFrame implements IView {
 	@Override
 	public void updateScoreCard(ScoreCard scoreCard) {
 		styleButtonFromScoreCardEntry(btnOnes, scoreCard.getScoreCardEntry(PointCategory.ONES));
+		styleButtonFromScoreCardEntry(btnTwos, scoreCard.getScoreCardEntry(PointCategory.TWOS));
+		styleButtonFromScoreCardEntry(btnThrees, scoreCard.getScoreCardEntry(PointCategory.THREES));
+		styleButtonFromScoreCardEntry(btnFours, scoreCard.getScoreCardEntry(PointCategory.FOURS));
+		styleButtonFromScoreCardEntry(btnFives, scoreCard.getScoreCardEntry(PointCategory.FIVES));
+		styleButtonFromScoreCardEntry(btnSixes, scoreCard.getScoreCardEntry(PointCategory.SIXES));
+		styleButtonFromScoreCardEntry(btn3OfAKind, scoreCard.getScoreCardEntry(PointCategory.THREE_KIND));
+		styleButtonFromScoreCardEntry(btn4OfAKind, scoreCard.getScoreCardEntry(PointCategory.FOUR_KIND));
+		styleButtonFromScoreCardEntry(btnFullHouse, scoreCard.getScoreCardEntry(PointCategory.FULL_HOUSE));
+		styleButtonFromScoreCardEntry(btnSmallStraight, scoreCard.getScoreCardEntry(PointCategory.SMALL_STRAIGHT));
+		styleButtonFromScoreCardEntry(btnLargeStraight, scoreCard.getScoreCardEntry(PointCategory.LARGE_STRAIGHT));
+		styleButtonFromScoreCardEntry(btnYahtzee, scoreCard.getScoreCardEntry(PointCategory.YAHTZEE));
+		styleButtonFromScoreCardEntry(btnChance, scoreCard.getScoreCardEntry(PointCategory.CHANCE));
+		styleButtonFromScoreCardEntry(btnYahtzeeBonus1, scoreCard.getScoreCardEntry(PointCategory.BONUS_1));
+		styleButtonFromScoreCardEntry(btnYahtzeeBonus2, scoreCard.getScoreCardEntry(PointCategory.BONUS_2));
+		styleButtonFromScoreCardEntry(btnYahtzeeBonus3, scoreCard.getScoreCardEntry(PointCategory.BONUS_3));
+		
 	}
 
 	private void styleButtonFromScoreCardEntry(ScoreCardButton button, ScoreCardEntry entry) {

@@ -27,7 +27,7 @@ public class ClientCommandServiceImpl extends UnicastRemoteObject implements Cli
 	
 	@Override
 	public void roundStarted() throws RemoteException {
-		// TODO Auto-generated method stub
+		getClient().roundStarted();
 		
 	}
 	
