@@ -44,16 +44,18 @@ public class PlayState extends PlayerState {
 	public void moveDice(DiceSet clientDice) throws CheatingException {
 		if (getDice().equalsIgnoreOrder(clientDice)) {
 			setDice(clientDice);
-		} else
+		} else {
+			log.info("Player is cheating");
 			throw new CheatingException();
+		}
 	}
 	
 	@Override
 	public void chooseCategory(PointCategory category) throws PointCategoryAlreadyTakenException, InvalidPointCategoryException {
 		getContext().getServerContext().scorePlayer(getContext().getPlayer(), category, getDice());
 		
-		getContext().setState(new IdleState(getContext()));
 		getContext().getServerContext().updateClientScoreCards();
+		getContext().setState(new IdleState(getContext()));
 		
 		// notify the ServerContext that the player's turn is over
 		getContext().getServerContext().getState().finishTurn(getContext().getPlayer());

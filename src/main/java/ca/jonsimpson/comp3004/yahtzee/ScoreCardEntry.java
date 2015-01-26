@@ -1,6 +1,8 @@
 package ca.jonsimpson.comp3004.yahtzee;
 
-public class ScoreCardEntry {
+import java.io.Serializable;
+
+public class ScoreCardEntry implements Serializable {
 	
 	private int points;
 	private Player player;

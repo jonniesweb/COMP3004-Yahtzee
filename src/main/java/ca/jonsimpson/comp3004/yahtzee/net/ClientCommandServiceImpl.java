@@ -6,13 +6,17 @@ import java.util.List;
 
 import ca.jonsimpson.comp3004.yahtzee.Player;
 import ca.jonsimpson.comp3004.yahtzee.ScoreCard;
+import ca.jonsimpson.comp3004.yahtzee.client.ClientLogic;
 
 public class ClientCommandServiceImpl extends UnicastRemoteObject implements ClientCommandService {
 	
-	private static final long serialVersionUID = -5230221009389671127L;
+	private static final long serialVersionUID = -3619305530827427268L;
 	
-	public ClientCommandServiceImpl() throws RemoteException {
+	private ClientLogic client;
+	
+	public ClientCommandServiceImpl(ClientLogic client) throws RemoteException {
 		super();
+		this.client = client;
 	}
 
 	@Override
@@ -20,35 +24,42 @@ public class ClientCommandServiceImpl extends UnicastRemoteObject implements Cli
 		// TODO Auto-generated method stub
 		
 	}
-
+	
 	@Override
 	public void roundStarted() throws RemoteException {
 		// TODO Auto-generated method stub
 		
 	}
-
+	
 	@Override
 	public void roundEnded() throws RemoteException {
 		// TODO Auto-generated method stub
 		
 	}
-
+	
 	@Override
 	public void gameEnded() throws RemoteException {
 		// TODO Auto-generated method stub
 		
 	}
-
+	
+	@Override
+	public void updateScoreCard(ScoreCard scoreCard) throws RemoteException {
+		getClient().getView().updateScoreCard(scoreCard);
+	}
+	
 	@Override
 	public List<Player> updatePlayers() throws RemoteException {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
-	@Override
-	public void updateScoreCard(ScoreCard scoreCard) throws RemoteException {
-		// TODO Auto-generated method stub
-		
+	public ClientLogic getClient() {
+		return client;
+	}
+
+	public void setClient(ClientLogic client) {
+		this.client = client;
 	}
 	
 }

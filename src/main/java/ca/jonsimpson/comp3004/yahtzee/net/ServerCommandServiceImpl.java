@@ -4,9 +4,6 @@ import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.List;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
 import ca.jonsimpson.comp3004.yahtzee.DiceSet;
 import ca.jonsimpson.comp3004.yahtzee.InvalidPointCategoryException;
 import ca.jonsimpson.comp3004.yahtzee.Player;
@@ -18,8 +15,6 @@ import ca.jonsimpson.comp3004.yahtzee.server.state.ServerContext;
 public class ServerCommandServiceImpl extends UnicastRemoteObject implements ServerCommandService {
 
 	private static final long serialVersionUID = 6167309695864789937L;
-	
-	private static final Log log = LogFactory.getLog(ServerCommandServiceImpl.class);
 	
 	/**
 	 * Server context for the state pattern

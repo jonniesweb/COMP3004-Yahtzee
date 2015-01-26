@@ -1,12 +1,17 @@
 package ca.jonsimpson.comp3004.yahtzee;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import ca.jonsimpson.comp3004.yahtzee.net.PointCategoryAlreadyTakenException;
 
-public class ScoreCard {
+public class ScoreCard implements Serializable {
 	
+	private static final Log log = LogFactory.getLog(ScoreCard.class);
 	private Map<PointCategory, ScoreCardEntry> scores = new HashMap<>();
 	
 	/**
@@ -29,10 +34,12 @@ public class ScoreCard {
 	 * @throws PointCategoryAlreadyTakenException
 	 */
 	public void addScoreCardEntry(PointCategory pointCategory, ScoreCardEntry entry) throws PointCategoryAlreadyTakenException {
-		if (! scores.containsKey(pointCategory))
+		if (! scores.containsKey(pointCategory)) {
 			scores.put(pointCategory, entry);
-		else
+			log.info(entry.getPlayer() + " scored [" + entry.getPoints() + "] points on category " + pointCategory);
+		} else {
 			throw new PointCategoryAlreadyTakenException();
+		}
 	}
 
 	@Override

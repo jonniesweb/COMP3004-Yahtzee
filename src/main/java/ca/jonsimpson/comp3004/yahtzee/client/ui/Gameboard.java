@@ -7,15 +7,12 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Observable;
 import java.util.Observer;
-import java.util.Random;
 
-import javax.swing.AbstractButton;
 import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JSeparator;
-import javax.swing.SwingConstants;
 import javax.swing.border.BevelBorder;
 import javax.swing.border.EmptyBorder;
 
@@ -23,11 +20,8 @@ import net.miginfocom.swing.MigLayout;
 import ca.jonsimpson.comp3004.yahtzee.DiceSet;
 import ca.jonsimpson.comp3004.yahtzee.PointCategory;
 import ca.jonsimpson.comp3004.yahtzee.ScoreCard;
+import ca.jonsimpson.comp3004.yahtzee.ScoreCardEntry;
 import ca.jonsimpson.comp3004.yahtzee.main.IView;
-
-import javax.swing.JLabel;
-
-import java.awt.Component;
 
 public class Gameboard extends JFrame implements IView {
 	
@@ -56,22 +50,23 @@ public class Gameboard extends JFrame implements IView {
 	private final JLabel lblYahtzeeBonus = new JLabel("YAHTZEE Bonus");
 	private final JLabel lblNewLabel = new JLabel("Rolling");
 	private final JLabel lblChosen = new JLabel("Chosen");
-	private final JButton btnOnes = createScoreCardButton("", PointCategory.ONES);
-	private final JButton btnTwos = createScoreCardButton("", PointCategory.TWOS);
-	private final JButton btnThrees = createScoreCardButton("", PointCategory.THREES);
-	private final JButton btnFours = createScoreCardButton("", PointCategory.FOURS);
-	private final JButton btnFives = createScoreCardButton("", PointCategory.FIVES);
-	private final JButton btnSixes = createScoreCardButton("", PointCategory.SIXES);
-	private final JButton btn3OfAKind = createScoreCardButton("", PointCategory.THREE_KIND);
-	private final JButton btn4OfAKind = createScoreCardButton("", PointCategory.FOUR_KIND);
-	private final JButton btnFullHouse = createScoreCardButton("", PointCategory.FULL_HOUSE);
-	private final JButton btnSmallStraight = createScoreCardButton("", PointCategory.SMALL_STRAIGHT);
-	private final JButton btnLargeStraight = createScoreCardButton("", PointCategory.LARGE_STRAIGHT);
-	private final JButton btnYahtzee = createScoreCardButton("", PointCategory.YAHTZEE);
-	private final JButton btnChance = createScoreCardButton("", PointCategory.CHANCE);
-	private final JButton btnYahtzeeBonus1 = createScoreCardButton("", PointCategory.BONUS_1);
-	private final JButton btnYahtzeeBonus2 = createScoreCardButton("", PointCategory.BONUS_2);
-	private final JButton btnYahtzeeBonus3 = createScoreCardButton("", PointCategory.BONUS_3);
+	private ScoreCardButton btnOnes;
+	private ScoreCardButton btnTwos;
+	private ScoreCardButton btnThrees;
+	private ScoreCardButton btnFours;
+	private ScoreCardButton btnFives;
+	private ScoreCardButton btnSixes;
+	private ScoreCardButton btn3OfAKind;
+	private ScoreCardButton btn4OfAKind;
+	private ScoreCardButton btnFullHouse;
+	private ScoreCardButton btnSmallStraight;
+	private ScoreCardButton btnLargeStraight;
+	private ScoreCardButton btnYahtzee;
+	private ScoreCardButton btnChance;
+	private ScoreCardButton btnYahtzeeBonus1;
+	private ScoreCardButton btnYahtzeeBonus2;
+	private ScoreCardButton btnYahtzeeBonus3;
+	private DoWhatISayObservable scoreCategoryObservable;
 	
 	/**
 	 * Create the frame.
@@ -82,6 +77,31 @@ public class Gameboard extends JFrame implements IView {
 	}
 
 	private void init() {
+		
+		scoreCardActionListener = new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				scoreCardCategoryAction(e);
+			}
+		};
+		
+		btnOnes = createScoreCardButton("", PointCategory.ONES);                   
+		btnTwos = createScoreCardButton("", PointCategory.TWOS);                   
+		btnThrees = createScoreCardButton("", PointCategory.THREES);               
+		btnFours = createScoreCardButton("", PointCategory.FOURS);                 
+		btnFives = createScoreCardButton("", PointCategory.FIVES);                 
+		btnSixes = createScoreCardButton("", PointCategory.SIXES);                 
+		btn3OfAKind = createScoreCardButton("", PointCategory.THREE_KIND);         
+		btn4OfAKind = createScoreCardButton("", PointCategory.FOUR_KIND);          
+		btnFullHouse = createScoreCardButton("", PointCategory.FULL_HOUSE);        
+		btnSmallStraight = createScoreCardButton("", PointCategory.SMALL_STRAIGHT);
+		btnLargeStraight = createScoreCardButton("", PointCategory.LARGE_STRAIGHT);
+		btnYahtzee = createScoreCardButton("", PointCategory.YAHTZEE);             
+		btnChance = createScoreCardButton("", PointCategory.CHANCE);               
+		btnYahtzeeBonus1 = createScoreCardButton("", PointCategory.BONUS_1);       
+		btnYahtzeeBonus2 = createScoreCardButton("", PointCategory.BONUS_2);       
+		btnYahtzeeBonus3 = createScoreCardButton("", PointCategory.BONUS_3);       
+		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 785, 498);
 		contentPane = new JPanel();
@@ -173,7 +193,16 @@ public class Gameboard extends JFrame implements IView {
 	
 	@Override
 	public void updateScoreCard(ScoreCard scoreCard) {
-		// TODO Auto-generated method stub
+		styleButtonFromScoreCardEntry(btnOnes, scoreCard.getScoreCardEntry(PointCategory.ONES));
+	}
+
+	private void styleButtonFromScoreCardEntry(ScoreCardButton button, ScoreCardEntry entry) {
+		if (entry != null) {
+			button.setText(Integer.toString(entry.getPoints()));
+			button.setEnabled(false);
+		} else {
+			button.setEnabled(true);
+		}
 		
 	}
 
@@ -269,25 +298,23 @@ public class Gameboard extends JFrame implements IView {
 
 	@Override
 	public void addScoreCategoryObserver(Observer observer) {
-		DoWhatISayObservable observable = new DoWhatISayObservable();
-		observable.addObserver(observer);
-		
-		/*
-		 * Create an ActionListener that will notify the server whenever the
-		 * user clicks one of the categories.
-		 */
-		scoreCardActionListener = new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				if (e.getSource() instanceof ScoreCardButton) {
-					ScoreCardButton button = (ScoreCardButton) e.getSource();
-					PointCategory pointCategory = button.getCategory();
-					observable.doIt(pointCategory);
-				}
-			}
-		};
+		scoreCategoryObservable = new DoWhatISayObservable();
+		scoreCategoryObservable.addObserver(observer);
 	}
-
+	
+	/**
+	 * Create an ActionListener that will notify the server whenever the
+	 * user clicks one of the categories.
+	 */
+	private void scoreCardCategoryAction(ActionEvent e) {
+		System.out.println("it keeps happening!");
+		if (e.getSource() instanceof ScoreCardButton) {
+			ScoreCardButton button = (ScoreCardButton) e.getSource();
+			PointCategory pointCategory = button.getCategory();
+			scoreCategoryObservable.doIt(pointCategory);
+		}
+	}
+	
 	private void addDieToSelectedDice(JButton die) {
 		panelSelectedDice.add(die);
 		die.addActionListener(savedToRolledActionListener);
@@ -318,8 +345,8 @@ public class Gameboard extends JFrame implements IView {
 	 * @wbp.factory.parameter.source text ""
 	 * @wbp.factory.parameter.source category null
 	 */
-	public static JButton createScoreCardButton(String text, PointCategory category) {
-		JButton button = new JButton(text);
+	public static ScoreCardButton createScoreCardButton(String text, PointCategory category) {
+		ScoreCardButton button = new ScoreCardButton(text, category);
 		button.setFocusable(false);
 		int xy = 30;
 		button.setPreferredSize(new Dimension(xy, xy));
@@ -329,7 +356,7 @@ public class Gameboard extends JFrame implements IView {
 		return button;
 	}
 	
-	class ScoreCardButton extends JButton {
+	static class ScoreCardButton extends JButton {
 		private PointCategory category;
 
 		public ScoreCardButton(String text, PointCategory category) {

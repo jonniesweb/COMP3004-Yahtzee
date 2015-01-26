@@ -28,7 +28,7 @@ public class ServerContext {
 	 * Players, mapped by their sessionID
 	 */
 	private Map<String, PlayerContext> players = new HashMap<String, PlayerContext>();
-	private static ScoreCard scoreCard;
+	private ScoreCard scoreCard = new ScoreCard();
 	
 	private ServerState state;
 

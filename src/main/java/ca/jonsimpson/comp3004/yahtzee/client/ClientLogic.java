@@ -16,7 +16,6 @@ import ca.jonsimpson.comp3004.yahtzee.DiceSet;
 import ca.jonsimpson.comp3004.yahtzee.InvalidPointCategoryException;
 import ca.jonsimpson.comp3004.yahtzee.Player;
 import ca.jonsimpson.comp3004.yahtzee.PointCategory;
-import ca.jonsimpson.comp3004.yahtzee.client.ui.Gameboard;
 import ca.jonsimpson.comp3004.yahtzee.main.IView;
 import ca.jonsimpson.comp3004.yahtzee.net.ClientCommandServiceImpl;
 import ca.jonsimpson.comp3004.yahtzee.net.NoMoreRollsException;
@@ -24,7 +23,7 @@ import ca.jonsimpson.comp3004.yahtzee.net.PointCategoryAlreadyTakenException;
 import ca.jonsimpson.comp3004.yahtzee.net.ServerCommandService;
 import ca.jonsimpson.comp3004.yahtzee.server.state.CheatingException;
 
-public class ClientLogic extends Observable {
+public class ClientLogic {
 	
 	private static final String RMI_SERVER_HOSTNAME = "localhost";
 	private static final int RMI_SERVER_PORT = 1099;
@@ -36,7 +35,7 @@ public class ClientLogic extends Observable {
 	private DiceSet currentDice;
 	
 	public ClientLogic(IView view) {
-		this.view = view;
+		this.setView(view);
 		
 		try {
 			connect();
@@ -49,7 +48,7 @@ public class ClientLogic extends Observable {
 	}
 
 	private void addObservers() {
-		view.addRollDiceObserver(new Observer() {
+		getView().addRollDiceObserver(new Observer() {
 			
 			@Override
 			public void update(Observable o, Object arg) {
@@ -62,7 +61,7 @@ public class ClientLogic extends Observable {
 			}
 		});
 		
-		view.addDiceSwitchFromSavedToRolledObserver(new Observer() {
+		getView().addDiceSwitchFromSavedToRolledObserver(new Observer() {
 			@Override
 			public void update(Observable o, Object arg) {
 				if (arg instanceof String) {
@@ -78,7 +77,7 @@ public class ClientLogic extends Observable {
 			}
 		});
 		
-		view.addDiceSwitchFromRolledToSavedObserver(new Observer() {
+		getView().addDiceSwitchFromRolledToSavedObserver(new Observer() {
 			@Override
 			public void update(Observable o, Object arg) {
 				if (arg instanceof String) {
@@ -97,12 +96,13 @@ public class ClientLogic extends Observable {
 		/*
 		 * When a category is clicked, notify the server of the choice.
 		 */
-		view.addScoreCategoryObserver(new Observer() {
+		getView().addScoreCategoryObserver(new Observer() {
 			@Override
 			public void update(Observable o, Object arg) {
+				log.info("User clicked on point category and the observer noticed!");
 				if (arg instanceof PointCategory) {
 					PointCategory category = (PointCategory) arg;
-					
+					log.info("User clicked on point category [" + category + "]" );
 					try {
 						service.chooseCategory(sessionID, category);
 					} catch (RemoteException | PointCategoryAlreadyTakenException | InvalidPointCategoryException e) {
@@ -123,7 +123,7 @@ public class ClientLogic extends Observable {
 			
 			// get the server version of the dice to stay
 			// synchronized just in case
-			view.updateDice(serverDice);
+			getView().updateDice(serverDice);
 		} catch (RemoteException | CheatingException e) {
 			log.error("Unable to switch dice", e);
 		}
@@ -131,7 +131,7 @@ public class ClientLogic extends Observable {
 
 	public void rollDice() throws RemoteException, NoMoreRollsException, IllegalAccessException {
 		setCurrentDice(service.rollDice(sessionID));
-		view.updateDice(getCurrentDice());
+		getView().updateDice(getCurrentDice());
 		log.info("rolled dice: " + getCurrentDice().getDice());
 	}
 
@@ -146,21 +146,25 @@ public class ClientLogic extends Observable {
 		
 		Player player = new Player(Integer.toString(new Random().nextInt()), "billy", sessionID);
 		
-		service.connect(sessionID, player, new ClientCommandServiceImpl());
+		service.connect(sessionID, player, new ClientCommandServiceImpl(this));
 		log.info("Successfully connected to the server");
 		
 	}
 	
-	public static void main(String[] args) {
-		new ClientLogic(new Gameboard());
-	}
-
 	public DiceSet getCurrentDice() {
 		return currentDice;
 	}
 
 	public void setCurrentDice(DiceSet currentDice) {
 		this.currentDice = currentDice;
+	}
+
+	public IView getView() {
+		return view;
+	}
+
+	public void setView(IView view) {
+		this.view = view;
 	}
 	
 }
