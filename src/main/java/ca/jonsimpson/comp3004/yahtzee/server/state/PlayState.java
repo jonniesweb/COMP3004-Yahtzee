@@ -18,7 +18,7 @@ public class PlayState extends PlayerState {
 	 * @param context
 	 */
 	public PlayState(PlayerContext context) {
-		this.context = context;
+		setContext(context);
 		setDice(new DiceSet());
 	}
 	
@@ -50,10 +50,13 @@ public class PlayState extends PlayerState {
 	
 	@Override
 	public void chooseCategory(PointCategory category) throws PointCategoryAlreadyTakenException, InvalidPointCategoryException {
-		ServerContext.scorePlayer(context.getPlayer(), category, getDice());
+		getContext().getServerContext().scorePlayer(getContext().getPlayer(), category, getDice());
 		
-		context.setState(new IdleState(context));
+		getContext().setState(new IdleState(getContext()));
 		getContext().getServerContext().updateClientScoreCards();
+		
+		// notify the ServerContext that the player's turn is over
+		getContext().getServerContext().getState().finishTurn(getContext().getPlayer());
 	}
 	
 	@Override

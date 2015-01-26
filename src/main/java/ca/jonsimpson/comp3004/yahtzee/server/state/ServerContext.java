@@ -44,7 +44,7 @@ public class ServerContext {
 	 * @throws InvalidPointCategoryException
 	 * @throws PointCategoryAlreadyTakenException
 	 */
-	static void scorePlayer(Player player, PointCategory category, DiceSet dice) throws InvalidPointCategoryException, PointCategoryAlreadyTakenException {
+	public void scorePlayer(Player player, PointCategory category, DiceSet dice) throws InvalidPointCategoryException, PointCategoryAlreadyTakenException {
 		int pointsFor = DiceSetScorer.getPointsFor(category, dice);
 		
 		ScoreCardEntry scoreCardEntry = new ScoreCardEntry(pointsFor, player);
@@ -74,8 +74,6 @@ public class ServerContext {
 		
 		getPlayers().put(sessionID, playerStateContext);
 		
-		// XXX testing
-//		playerStateContext.setState(new PlayState(playerStateContext));
 	}
 	
 	List<Player> getPlayerList() {
@@ -102,19 +100,19 @@ public class ServerContext {
 	}
 
 	public void updateClientScoreCards() {
-		for (PlayerContext client : players.values()) {
+		for (PlayerContext context : getAllPlayerContexts()) {
 			try {
-				client.getService().updateScoreCard(scoreCard);
+				context.getService().updateScoreCard(scoreCard);
 			} catch (RemoteException e) {
-				// TODO Auto-generated catch block
+				// TODO Handle player disconnect
 				e.printStackTrace();
 			}
 		}
 	}
 
-	protected Collection<PlayerContext> getAllPlayerContexts(ServerState serverState) {
-		Collection<PlayerContext> players = serverState.getContext().getPlayers().values();
-		return players;
+	protected Collection<PlayerContext> getAllPlayerContexts() {
+		Collection<PlayerContext> playerContext = getPlayers().values();
+		return playerContext;
 	}
 	
 	

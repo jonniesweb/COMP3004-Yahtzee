@@ -45,5 +45,7 @@ public abstract class ServerState {
 	public ServerContext getContext() {
 		return context;
 	}
+
+	public void finishTurn(Player player) {}
 	
 }

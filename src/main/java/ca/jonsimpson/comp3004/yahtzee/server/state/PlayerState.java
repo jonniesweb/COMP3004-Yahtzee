@@ -8,7 +8,7 @@ import ca.jonsimpson.comp3004.yahtzee.net.PointCategoryAlreadyTakenException;
 
 public abstract class PlayerState {
 
-	protected PlayerContext context;
+	private PlayerContext context;
 
 	public void chooseCategory(PointCategory category) throws PointCategoryAlreadyTakenException, InvalidPointCategoryException {}
 
