@@ -144,7 +144,7 @@ public class ClientLogic {
 		// create unique passphrase for authentication
 		sessionID = UUID.randomUUID().toString();
 		
-		Player player = new Player(Integer.toString(new Random().nextInt()), "billy", sessionID);
+		Player player = new Player(new Random().nextInt(), "billy", sessionID);
 		
 		service.connect(sessionID, player, new ClientCommandServiceImpl(this));
 		log.info("Successfully connected to the server");

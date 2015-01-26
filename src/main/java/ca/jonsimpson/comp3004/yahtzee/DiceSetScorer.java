@@ -99,6 +99,9 @@ public final class DiceSetScorer {
 	
 	public static int getPointsForFullHouse(DiceSet dice) {
 		List<Integer> list = dice.getSortedDice();
+		if (list.size() < 5) {
+			return 0;
+		}
 		
 		int first = list.get(0);
 		int second = list.get(4);
@@ -132,6 +135,10 @@ public final class DiceSetScorer {
 	
 	public static int getPointsForYahtzee(DiceSet dice) {
 		List<Integer> list = dice.getDice();
+		
+		if (list.size() < 5) {
+			return 0;
+		}
 		
 		if (list.get(0).equals(list.get(1)) && list.get(0).equals(list.get(2))
 				&& list.get(0).equals(list.get(3))

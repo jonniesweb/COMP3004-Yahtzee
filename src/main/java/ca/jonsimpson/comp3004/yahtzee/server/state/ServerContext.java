@@ -10,6 +10,9 @@ import java.util.Map;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import yahtzeeTrace.ScoreType;
+import yahtzeeTrace.YahtzeeTrace;
+import yahtzeeTrace.YahtzeeTracer;
 import ca.jonsimpson.comp3004.yahtzee.DiceSet;
 import ca.jonsimpson.comp3004.yahtzee.DiceSetScorer;
 import ca.jonsimpson.comp3004.yahtzee.InvalidPointCategoryException;
@@ -29,6 +32,7 @@ public class ServerContext {
 	 */
 	private Map<String, PlayerContext> players = new HashMap<String, PlayerContext>();
 	private ScoreCard scoreCard = new ScoreCard();
+	private YahtzeeTrace tracer = new YahtzeeTracer();
 	
 	private ServerState state;
 
@@ -50,6 +54,70 @@ public class ServerContext {
 		ScoreCardEntry scoreCardEntry = new ScoreCardEntry(pointsFor, player);
 		
 		scoreCard.addScoreCardEntry(category, scoreCardEntry);
+		
+		traceScore(player, dice, pointsFor, category);
+	}
+
+	private void traceScore(Player player, DiceSet dice, int pointsFor, PointCategory category) {
+		// trace scoring points
+		if (getState() instanceof GameRunningState) {
+			GameRunningState state = (GameRunningState) getState();
+			
+			ScoreType scoreType = null;
+			switch (category) {
+			case ONES:
+				scoreType = ScoreType.ACES;
+				break;
+			case TWOS:
+				scoreType = ScoreType.TWOS;
+				break;
+			case THREES:
+				scoreType = ScoreType.THREES;
+				break;
+			case FOURS:
+				scoreType = ScoreType.FOURS;
+				break;
+			case FIVES:
+				scoreType = ScoreType.FIVES;
+				break;
+			case SIXES:
+				scoreType = ScoreType.SIXES;
+				break;
+			case THREE_KIND:
+				scoreType = ScoreType.THREEOAK;
+				break;
+			case FOUR_KIND:
+				scoreType = ScoreType.FOUROAK;
+				break;
+			case FULL_HOUSE:
+				scoreType = ScoreType.FULLHOUSE;
+				break;
+			case SMALL_STRAIGHT:
+				scoreType = ScoreType.SMSTRAIGHT;
+				break;
+			case LARGE_STRAIGHT:
+				scoreType = ScoreType.LGSTRAIGHT;
+				break;
+			case CHANCE:
+				// guess there's no chances with Darryl's ScoreType enum
+				// might as well assign it to something since the tracer code
+				// just outright breaks otherwise
+				scoreType = ScoreType.ACES;
+				// that feels better
+				break;
+			case YAHTZEE:
+			case BONUS_1:
+			case BONUS_2:
+			case BONUS_3:
+				scoreType = ScoreType.YAHTZEE;
+				break;
+			default:
+				scoreType = ScoreType.YAHTZEE;
+				break;
+			}
+			
+			getTracer().traceScore(state.getRound(), player.getId(), dice.getDice(), pointsFor, scoreType);
+		}
 	}
 
 	public Map<String, PlayerContext> getPlayers() {
@@ -113,6 +181,18 @@ public class ServerContext {
 	protected Collection<PlayerContext> getAllPlayerContexts() {
 		Collection<PlayerContext> playerContext = getPlayers().values();
 		return playerContext;
+	}
+
+	public YahtzeeTrace getTracer() {
+		return tracer;
+	}
+
+	public void setTracer(YahtzeeTrace tracer) {
+		this.tracer = tracer;
+	}
+
+	public ScoreCard getScoreCard() {
+		return scoreCard;
 	}
 	
 	

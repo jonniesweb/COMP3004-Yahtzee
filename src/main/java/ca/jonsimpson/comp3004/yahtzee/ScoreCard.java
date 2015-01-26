@@ -1,6 +1,7 @@
 package ca.jonsimpson.comp3004.yahtzee;
 
 import java.io.Serializable;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -12,6 +13,7 @@ import ca.jonsimpson.comp3004.yahtzee.net.PointCategoryAlreadyTakenException;
 public class ScoreCard implements Serializable {
 	
 	private static final Log log = LogFactory.getLog(ScoreCard.class);
+	private static final int MAX_CATEGORIES = 13;
 	private Map<PointCategory, ScoreCardEntry> scores = new HashMap<>();
 	
 	/**
@@ -41,6 +43,10 @@ public class ScoreCard implements Serializable {
 			throw new PointCategoryAlreadyTakenException();
 		}
 	}
+	
+	public Collection<ScoreCardEntry> getScores() {
+		return scores.values();
+	}
 
 	@Override
 	public String toString() {
@@ -50,5 +56,11 @@ public class ScoreCard implements Serializable {
 		}
 		
 		return result;
+	}
+
+
+	public boolean isSpotsLeft() {
+		return scores.size() >= MAX_CATEGORIES ? false : true;
+
 	}
 }

@@ -34,7 +34,7 @@ public abstract class PlayerState {
 		getContext().getPlayer().setDice(dice);
 	}
 	
-	public String getPlayerId() {
+	public int getPlayerId() {
 		return getContext().getPlayer().getId();
 	}
 	

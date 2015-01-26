@@ -11,7 +11,7 @@ public class Player implements Serializable {
 	 * Unique identifier for the client and server to use for the length of the
 	 * game
 	 */
-	private String id;
+	private int id;
 	
 	/**
 	 * A user-given name for their player
@@ -35,7 +35,7 @@ public class Player implements Serializable {
 	 * Create a player with the given name.
 	 * @param name
 	 */
-	public Player(String id, String name, String secret) {
+	public Player(int id, String name, String secret) {
 		this.id = id;
 		this.name = name;
 		this.secret = secret;
@@ -49,7 +49,7 @@ public class Player implements Serializable {
 		this.name = name;
 	}
 
-	public String getId() {
+	public int getId() {
 		return id;
 	}
 
