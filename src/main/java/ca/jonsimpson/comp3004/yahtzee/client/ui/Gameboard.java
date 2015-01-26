@@ -27,7 +27,8 @@ public class Gameboard extends JFrame implements IView {
 	private final JPanel panelSelectedDice = new JPanel();
 	private final JButton btnRoll = new JButton("Roll");
 	private final JSeparator separator = new JSeparator();
-	private DoWhatISayObservable chosenToRollObserver;
+	private ActionListener savedToRolledActionListener;
+	private ActionListener rolledToSavedActionListener;
 	
 	/**
 	 * Create the frame.
@@ -61,36 +62,10 @@ public class Gameboard extends JFrame implements IView {
 		
 	}
 	
-	private JButton getDie(Integer number) {
-		JButton button = new JButton(number.toString());
-		button.setSize(50, 50);
-		button.setBackground(new Color(255, 255, 255));
-		return button;
-	}
-	
-	private void addDieToSelectedDice(JButton die) {
-		panelSelectedDice.add(die);
-	}
-	
-	private void addDieToRolledDice(JButton die) {
-		panelRolledDice.add(die);
+	@Override
+	public void updateScoreCard(ScoreCard scoreCard) {
+		// TODO Auto-generated method stub
 		
-		// add an action listener to move the die to rolled dice
-		// notify the server of the new DiceSet
-		die.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				moveDieToRolled(die);
-			}
-		});
-	}
-	
-	protected void moveDieToRolled(JButton die) {
-		panelSelectedDice.remove(die);
-		panelSelectedDice.add(die);
-
-		// notify the controller
-		chosenToRollObserver.doIt(die.getText());
 	}
 
 	/**
@@ -114,14 +89,22 @@ public class Gameboard extends JFrame implements IView {
 	}
 
 	private void update(JComponent component) {
-		component.revalidate();
-//		component.repaint();
-	}
+			component.revalidate();
+	//		component.repaint();
+		}
 
-	@Override
-	public void updateScoreCard(ScoreCard scoreCard) {
-		// TODO Auto-generated method stub
-		
+	private JButton getDie(Integer number) {
+		JButton button = new JButton(number.toString());
+		button.setSize(50, 50);
+		button.setBackground(new Color(255, 255, 255));
+		return button;
+	}
+	
+	private void addObserverToButton(Observer observer, JButton button) {
+		// on roll button press, notify the observers
+		DoWhatISayObservable observable = new DoWhatISayObservable();
+		observable.addObserver(observer);
+		button.addActionListener(e -> observable.doIt());
 	}
 
 	@Override
@@ -130,37 +113,68 @@ public class Gameboard extends JFrame implements IView {
 		addObserverToButton(observer, btnRoll);
 	}
 
-	private void addObserverToButton(Observer observer, JButton button) {
-		// on roll button press, notify the observers
-		DoWhatISayObservable observable = new DoWhatISayObservable();
-		observable.addObserver(observer);
-		button.addActionListener(new ActionListener() {
+	@Override
+		public void addDiceSwitchFromRolledToSavedObserver(Observer observer) {
+			DoWhatISayObservable observable = new DoWhatISayObservable();
+			observable.addObserver(observer);
 			
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				observable.doIt();
-			}
-		});
-	}
+			/*
+			 * Create an ActionListener that will notify the observer of the
+			 * die that the user clicked. No fancy lambdas here.
+			 */
+			rolledToSavedActionListener = new ActionListener() {
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					if (e.getSource() instanceof JButton) {
+						JButton button = (JButton) e.getSource();
+						String die = button.getText();
+						observable.doIt(die);
+					}
+				}
+			};
+		}
 
 	@Override
-	public void addDiceSwitchFromRollToChosenObserver(Observer observer) {
-		// TODO Auto-generated method stub
-		
-	}
+		public void addDiceSwitchFromSavedToRolledObserver(Observer observer) {
+			DoWhatISayObservable observable = new DoWhatISayObservable();
+			observable.addObserver(observer);
 
-	@Override
-	public void addDiceSwitchFromChosenToRollObserver(Observer observer) {
-		chosenToRollObserver = new DoWhatISayObservable();
-		chosenToRollObserver.addObserver(observer);
-	}
+			/*
+			 * Create an ActionListener that will notify the observer of the
+			 * die that the user clicked. No fancy lambdas here.
+			 */
+			savedToRolledActionListener = new ActionListener() {
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					if (e.getSource() instanceof JButton) {
+						JButton button = (JButton) e.getSource();
+						String die = button.getText();
+						observable.doIt(die);
+					}
+				}
+			};
+		}
 
 	@Override
 	public void addChooseScoreCategoryObserver(Observer observer) {
 		// TODO Auto-generated method stub
 		
 	}
+
+	private void addDieToSelectedDice(JButton die) {
+		panelSelectedDice.add(die);
+		die.addActionListener(savedToRolledActionListener);
+	}
 	
+	private void addDieToRolledDice(JButton die) {
+		panelRolledDice.add(die);
+		
+		// add an action listener to move the die to rolled dice
+		// notify the server of the new DiceSet
+		die.addActionListener(rolledToSavedActionListener);
+	}
+
+
 	class DoWhatISayObservable extends Observable {
 		public void doIt() {
 			setChanged();

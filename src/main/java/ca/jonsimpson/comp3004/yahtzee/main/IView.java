@@ -14,8 +14,8 @@ public interface IView {
 	
 	// Add observables for various UI actions
 	public void addRollDiceObserver(Observer observer);
-	public void addDiceSwitchFromRollToChosenObserver(Observer observer);
-	public void addDiceSwitchFromChosenToRollObserver(Observer observer);
+	public void addDiceSwitchFromRolledToSavedObserver(Observer observer);
+	public void addDiceSwitchFromSavedToRolledObserver(Observer observer);
 	public void addChooseScoreCategoryObserver(Observer observer);
 	
 }

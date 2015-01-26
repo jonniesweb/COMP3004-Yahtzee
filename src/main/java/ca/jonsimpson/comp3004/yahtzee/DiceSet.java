@@ -133,4 +133,18 @@ public class DiceSet implements Serializable {
 	public String toString() {
 		return "Dice: " + getDice().toString() + " rolls left: " + getRollsLeft();
 	}
+
+	public void moveSavedToRolled(int die) {
+		if (savedDice.contains(die)) {
+			savedDice.remove((Integer) die);
+			rolledDice.add(die);
+		}
+	}
+	
+	public void moveRolledToSaved(int die) {
+		if (rolledDice.contains(die)) {
+			rolledDice.remove((Integer) die);
+			savedDice.add(die);
+		}
+	}
 }

@@ -45,10 +45,11 @@ public interface ServerCommandService extends Remote {
 	 * 
 	 * @param sessionID
 	 * @param dice
+	 * @return TODO
 	 * @throws RemoteException
 	 * @throws CheatingException
 	 */
-	public void moveDice(String sessionID, DiceSet dice) throws RemoteException, CheatingException;
+	public DiceSet moveDice(String sessionID, DiceSet dice) throws RemoteException, CheatingException;
 	
 	/**
 	 * Set the name of the player given by parameter sessionID
